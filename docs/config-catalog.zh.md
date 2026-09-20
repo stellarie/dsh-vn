@@ -471,6 +471,20 @@ export interface Config {
 
 来源：[`packages/client/ui-sidebar-documentpreview/src/config.ts:5`](../packages/client/ui-sidebar-documentpreview/src/config.ts)
 
+<a id="deepseek-aidsh-client-ui-vn"></a>
+
+## `@deepseek-ai/dsh-client-ui-vn`
+
+```ts config-catalog
+/** Host configuration for managed VN image storage. */
+export interface Config {
+  /** Absolute directory that owns content-addressed VN images. */
+  assetRoot: string
+}
+```
+
+来源：[`packages/client/ui-vn/src/index.ts:15`](../packages/client/ui-vn/src/index.ts)
+
 <a id="deepseek-aidsh-compaction-basic"></a>
 
 ## `@deepseek-ai/dsh-compaction-basic`

@@ -1,0 +1,21 @@
+{
+  "extends": "../../../tsconfig.base.client.json",
+  "compilerOptions": { "rootDir": "src", "outDir": "lib/types", "types": ["node", "client-build-environment"] },
+  "include": ["src"],
+  "references": [
+    { "path": "../../../vendor/schemastery" },
+    { "path": "../../../vendor/cordis" },
+    { "path": "../../util/home-paths" },
+    { "path": "../../settings/settings" },
+    { "path": "../../host/webserver" },
+    { "path": "../connection/tsconfig.host.json" },
+    { "path": "../connection/tsconfig.client.json" },
+    { "path": "../locale" },
+    { "path": "../ui-chat" },
+    { "path": "../ui-conversation" },
+    { "path": "../ui-renderer" },
+    { "path": "../ui-session" },
+    { "path": "../ui-settings" },
+    { "path": "../ui-slots" }
+  ]
+}

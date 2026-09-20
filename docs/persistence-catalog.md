@@ -1816,17 +1816,17 @@ Sources: [`packages/api/session-controller/src/types.ts:381`](../packages/api/se
 | `kind` | required | `"user"` |
 | `rpcId` | required | `string` |
 
-<a id="persistence-type-eventagentinboxspliceddatainserted0source15references"></a>
+<a id="persistence-type-eventagentinboxspliceddatainserted0source14references"></a>
 
-### `event:agent/inbox/spliced.data.inserted[0].source[15].references`
+### `event:agent/inbox/spliced.data.inserted[0].source[14].references`
 
 SHA-256: `df843efd87c78cf8de98f8e0d0216956cd568d0d0e56a22c853663e274aa1a18`
 
-Array of [`event:agent/inbox/spliced.data.inserted[0].source[15].references[0]`](#persistence-type-eventagentinboxspliceddatainserted0source15references0).
+Array of [`event:agent/inbox/spliced.data.inserted[0].source[14].references[0]`](#persistence-type-eventagentinboxspliceddatainserted0source14references0).
 
-<a id="persistence-type-eventagentinboxspliceddatainserted0source15references0"></a>
+<a id="persistence-type-eventagentinboxspliceddatainserted0source14references0"></a>
 
-### `event:agent/inbox/spliced.data.inserted[0].source[15].references[0]`
+### `event:agent/inbox/spliced.data.inserted[0].source[14].references[0]`
 
 SHA-256: `4f91f187baeabef5c7950c4780d31bbe39f3345dff591a6cf26ac7e135ac1cf4`
 
@@ -2669,7 +2669,7 @@ SHA-256: `3ee93b06f3a125850337602bcdf155d2538c43a5c944ec55b1b3c365152d6796`
 
 | Property | Presence | Type |
 |---|---|---|
-| `data` | required | [`packages/feedback/message-feedback/src/types.ts#MessageFeedbackDelete`](#persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackdelete) |
+| `data` | required | [`packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackDelete`](#persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackdelete) |
 | `ignorable` | optional | `true` |
 | `seq` | required | `number` |
 | `time` | required | `number` |
@@ -2683,7 +2683,7 @@ SHA-256: `b5086d249e8502e9ead1d39156bb8d559bde7951cac0f14ce150345b4e42a2bf`
 
 | Property | Presence | Type |
 |---|---|---|
-| `data` | required | [`packages/feedback/message-feedback/src/types.ts#MessageFeedbackPut`](#persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackput) |
+| `data` | required | [`packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackPut`](#persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackput) |
 | `ignorable` | optional | `true` |
 | `seq` | required | `number` |
 | `time` | required | `number` |
@@ -4528,7 +4528,7 @@ Sources: [`packages/context/session-reference/src/types.ts:13`](../packages/cont
 |---|---|---|
 | `form` | required | `"recall"` |
 | `kind` | required | `"session-reference"` |
-| `references` | required | [`event:agent/inbox/spliced.data.inserted[0].source[15].references`](#persistence-type-eventagentinboxspliceddatainserted0source15references) |
+| `references` | required | [`event:agent/inbox/spliced.data.inserted[0].source[14].references`](#persistence-type-eventagentinboxspliceddatainserted0source14references) |
 | `version` | required | `1` |
 
 <a id="persistence-type-packagescoreagentsrctypestsinboxtarget"></a>
@@ -4826,26 +4826,26 @@ Sources: [`packages/feedback/command-feedback/src/types.ts:27`](../packages/feed
 | `category` | optional | [`event:feedback/message-put.data.item.category`](#persistence-type-eventfeedbackmessage-putdataitemcategory) |
 | `text` | optional | `string` |
 
-<a id="persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackdelete"></a>
+<a id="persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackdelete"></a>
 
-### `packages/feedback/message-feedback/src/types.ts#MessageFeedbackDelete`
+### `packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackDelete`
 
 SHA-256: `7c6129b6961cf4b2a030f36c78d2b0a5be38617651a9b81322e054ee512bee06`
 
-Sources: [`packages/feedback/message-feedback/src/types.ts:46`](../packages/feedback/message-feedback/src/types.ts)
+Sources: [`packages/feedback/message-feedback/lib/types/types.d.ts:40`](../packages/feedback/message-feedback/lib/types/types.d.ts)
 
 | Property | Presence | Type |
 |---|---|---|
 | `messageId` | required | `string` |
 | `sessionId` | required | `string` |
 
-<a id="persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackitem"></a>
+<a id="persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackitem"></a>
 
-### `packages/feedback/message-feedback/src/types.ts#MessageFeedbackItem`
+### `packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackItem`
 
 SHA-256: `3d7d07060a7be77984feb651ea2bf1925d3e0477911d9d3ed86330d1e8ca6182`
 
-Sources: [`packages/feedback/message-feedback/src/types.ts:20`](../packages/feedback/message-feedback/src/types.ts)
+Sources: [`packages/feedback/message-feedback/lib/types/types.d.ts:16`](../packages/feedback/message-feedback/lib/types/types.d.ts)
 
 | Property | Presence | Type |
 |---|---|---|
@@ -4853,30 +4853,30 @@ Sources: [`packages/feedback/message-feedback/src/types.ts:20`](../packages/feed
 | `createdAt` | required | `number` |
 | `messageId` | required | `string` |
 | `note` | optional | `string` |
-| `rating` | required | [`packages/feedback/message-feedback/src/types.ts#MessageFeedbackRating`](#persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackrating) |
+| `rating` | required | [`packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackRating`](#persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackrating) |
 | `updatedAt` | required | `number` |
 | `version` | required | `string` |
 
-<a id="persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackput"></a>
+<a id="persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackput"></a>
 
-### `packages/feedback/message-feedback/src/types.ts#MessageFeedbackPut`
+### `packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackPut`
 
 SHA-256: `aa7bc2817014ca6c45719b1c193c5c131be718a0921f34345098ff250f444626`
 
-Sources: [`packages/feedback/message-feedback/src/types.ts:38`](../packages/feedback/message-feedback/src/types.ts)
+Sources: [`packages/feedback/message-feedback/lib/types/types.d.ts:33`](../packages/feedback/message-feedback/lib/types/types.d.ts)
 
 | Property | Presence | Type |
 |---|---|---|
-| `item` | required | [`packages/feedback/message-feedback/src/types.ts#MessageFeedbackItem`](#persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackitem) |
+| `item` | required | [`packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackItem`](#persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackitem) |
 | `sessionId` | required | `string` |
 
-<a id="persistence-type-packagesfeedbackmessage-feedbacksrctypestsmessagefeedbackrating"></a>
+<a id="persistence-type-packagesfeedbackmessage-feedbacklibtypestypesdtsmessagefeedbackrating"></a>
 
-### `packages/feedback/message-feedback/src/types.ts#MessageFeedbackRating`
+### `packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackRating`
 
 SHA-256: `390eed1028aba02774f14408647acec10ec5516e97d4f15ecde2b9989d5a69f2`
 
-Sources: [`packages/feedback/message-feedback/src/types.ts:17`](../packages/feedback/message-feedback/src/types.ts)
+Sources: [`packages/feedback/message-feedback/lib/types/types.d.ts:14`](../packages/feedback/message-feedback/lib/types/types.d.ts)
 
 One of:
 
@@ -6337,7 +6337,7 @@ SHA-256: `57f3f606ff8b6c84d9c443faace9d1dd10cca0354f37a4f515ef075f7c351b90`
 
 SHA-256: `4cd48f3e5108bd6ebedf7301c3638839b8b2b9db8dbd493974177fbdeb91a01b`
 
-Sources: [`packages/api/session-controller/src/types.ts:376`](../packages/api/session-controller/src/types.ts) · [`packages/attachment/attachment/src/brand.ts:6`](../packages/attachment/attachment/src/brand.ts) · [`packages/compaction/compaction/src/brand.ts:4`](../packages/compaction/compaction/src/brand.ts) · [`packages/core/session/src/types.ts:19`](../packages/core/session/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:20`](../packages/experimental/agent-team/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:32`](../packages/experimental/agent-team/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:8`](../packages/experimental/agent-team/src/types.ts) · [`packages/feedback/message-feedback/src/types.ts:14`](../packages/feedback/message-feedback/src/types.ts) · [`packages/goal/goal/src/types.ts:17`](../packages/goal/goal/src/types.ts) · [`packages/interaction/commands/src/brand.ts:31`](../packages/interaction/commands/src/brand.ts) · [`packages/interaction/user-approval/src/types.ts:17`](../packages/interaction/user-approval/src/types.ts) · [`packages/llm/llm-retry/src/brand.ts:4`](../packages/llm/llm-retry/src/brand.ts) · [`packages/llm/llm/src/brand.ts:16`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:31`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:43`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:67`](../packages/llm/llm/src/brand.ts) · [`packages/schedule/schedule/src/types.ts:10`](../packages/schedule/schedule/src/types.ts) · [`packages/session/session-title/src/index.ts:42`](../packages/session/session-title/src/index.ts) · [`packages/session/session-title/src/types.ts:17`](../packages/session/session-title/src/types.ts) · [`packages/webhook/webhook/src/brand.ts:12`](../packages/webhook/webhook/src/brand.ts) · [`packages/webhook/webhook/src/brand.ts:6`](../packages/webhook/webhook/src/brand.ts) · [`packages/webhook/webhook/src/brand.ts:9`](../packages/webhook/webhook/src/brand.ts) · [`packages/workflow/workflow/src/types.ts:13`](../packages/workflow/workflow/src/types.ts)
+Sources: [`packages/api/session-controller/src/types.ts:376`](../packages/api/session-controller/src/types.ts) · [`packages/attachment/attachment/src/brand.ts:6`](../packages/attachment/attachment/src/brand.ts) · [`packages/compaction/compaction/src/brand.ts:4`](../packages/compaction/compaction/src/brand.ts) · [`packages/core/session/src/types.ts:19`](../packages/core/session/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:20`](../packages/experimental/agent-team/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:32`](../packages/experimental/agent-team/src/types.ts) · [`packages/experimental/agent-team/src/types.ts:8`](../packages/experimental/agent-team/src/types.ts) · [`packages/feedback/message-feedback/lib/types/types.d.ts:12`](../packages/feedback/message-feedback/lib/types/types.d.ts) · [`packages/goal/goal/src/types.ts:17`](../packages/goal/goal/src/types.ts) · [`packages/interaction/commands/src/brand.ts:31`](../packages/interaction/commands/src/brand.ts) · [`packages/interaction/user-approval/src/types.ts:17`](../packages/interaction/user-approval/src/types.ts) · [`packages/llm/llm-retry/src/brand.ts:4`](../packages/llm/llm-retry/src/brand.ts) · [`packages/llm/llm/src/brand.ts:16`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:31`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:43`](../packages/llm/llm/src/brand.ts) · [`packages/llm/llm/src/brand.ts:67`](../packages/llm/llm/src/brand.ts) · [`packages/schedule/schedule/src/types.ts:10`](../packages/schedule/schedule/src/types.ts) · [`packages/session/session-title/src/index.ts:42`](../packages/session/session-title/src/index.ts) · [`packages/session/session-title/src/types.ts:17`](../packages/session/session-title/src/types.ts) · [`packages/webhook/webhook/src/brand.ts:12`](../packages/webhook/webhook/src/brand.ts) · [`packages/webhook/webhook/src/brand.ts:6`](../packages/webhook/webhook/src/brand.ts) · [`packages/webhook/webhook/src/brand.ts:9`](../packages/webhook/webhook/src/brand.ts) · [`packages/workflow/workflow/src/types.ts:13`](../packages/workflow/workflow/src/types.ts)
 
 `string`
 

@@ -364,6 +364,19 @@
   --dsh-composer-dock-inset: 8px;
 }
 
+.backgroundLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scrollBody {
+  position: relative;
+  z-index: 1;
+}
+
 .embeddedBody {
   overflow: hidden;
   --dsh-chat-content-width: min(calc(100% - 32px), 920px);

@@ -223,6 +223,8 @@
       "@deepseek-ai/dsh-client-ui-approval/client": ["./packages/client/ui-approval/src/client/index.ts"],
       "@deepseek-ai/dsh-client-ui-chat": ["./packages/client/ui-chat/src"],
       "@deepseek-ai/dsh-client-ui-chat/client": ["./packages/client/ui-chat/src/client/index.ts"],
+      "@deepseek-ai/dsh-client-ui-vn": ["./packages/client/ui-vn/src"],
+      "@deepseek-ai/dsh-client-ui-vn/client": ["./packages/client/ui-vn/src/client/index.ts"],
       "@deepseek-ai/dsh-client-ui-conversation": ["./packages/client/ui-conversation/src"],
       "@deepseek-ai/dsh-client-ui-conversation/client": ["./packages/client/ui-conversation/src/client/index.ts"],
       "@deepseek-ai/dsh-client-ui-tool": ["./packages/client/ui-tool/src"],
