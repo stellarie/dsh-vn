@@ -61,7 +61,7 @@ function delivered(status: SendTeamMessageResult['status'] = 'accepted'): { ok: 
   return { ok: true, value: { messageId: 'team-message-1' as SendTeamMessageResult['messageId'], status } }
 }
 
-function remoteFailure(message: string): { ok: false; error: RemoteError } {
+function remoteFailure(message: string): { ok: false; error: RemoteError<'gateway/internal'> } {
   return { ok: false, error: new RemoteError('gateway/internal', message, {}) }
 }
 
@@ -158,7 +158,7 @@ describe('TeamSidebar', () => {
   })
 
   it('sends the same completion request from the pane and from the dialog', async () => {
-    const updateTask: TeamActionInjected['updateTask'] = vi.fn(() => Promise.resolve({
+    const updateTask = vi.fn<TeamActionInjected['updateTask']>(() => Promise.resolve({
       ok: true,
       value: { ok: true, value: task({ revision: 2, status: 'completed' }) },
     }))
@@ -266,7 +266,7 @@ describe('TeamSidebar', () => {
   })
 
   it('shows a steering failure without clearing the drafted line', async () => {
-    const steer = vi.fn(() => Promise.resolve(remoteFailure('mailbox full')))
+    const steer = vi.fn<TeamSidebarInjected['steer']>(() => Promise.resolve(remoteFailure('mailbox full')))
     render(<TeamSidebar {...props(actions({ steer }))} />)
     await screen.findAllByText('Implement runtime')
 
