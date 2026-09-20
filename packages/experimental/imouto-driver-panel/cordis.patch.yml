@@ -6,4 +6,4 @@
     - id: imouto-driver-panel
       name: '@deepseek-ai/dsh-experimental-imouto-driver-panel'
       config:
-        root: !!js process.env.IMOUTO_DRIVER_ROOT ?? ''
+        root: !!js process.env.IMOUTO_DRIVER_ROOT

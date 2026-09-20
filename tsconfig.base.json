@@ -227,6 +227,7 @@
       "@deepseek-ai/dsh-experimental-imouto-dev-profile": ["./packages/experimental/imouto-dev-profile/src"],
       "@deepseek-ai/dsh-experimental-imouto-driver-panel": ["./packages/experimental/imouto-driver-panel/src"],
       "@deepseek-ai/dsh-experimental-imouto-driver-panel/client": ["./packages/experimental/imouto-driver-panel/src/client/index.ts"],
+      "@deepseek-ai/dsh-experimental-imouto-driver-panel/src/*": ["./packages/experimental/imouto-driver-panel/src/*"],
       "@stellarie/dsh-imouto-codex": ["./vendor/imouto-codex/src"],
       "@stellarie/dsh-imouto-codex/client": ["./vendor/imouto-codex/src/client/index.ts"],
       "@deepseek-ai/dsh-client-ui-vn": ["./packages/client/ui-vn/src"],

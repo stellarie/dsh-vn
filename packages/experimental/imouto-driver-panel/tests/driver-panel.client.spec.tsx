@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { DriverPanel } from '../src/client/DriverPanel.tsx'
+import { DriverPanel, type DriverPanelProps } from '../src/client/DriverPanel.tsx'
 import type { DriverSnapshot, DriverWorker } from '../src/types.ts'
 
 const t = (key: string): string => key
 /** Owner props are framework-made; the pane reads only its locale seat. */
-const props = { t } as never
+const props = { t } as unknown as DriverPanelProps
 
 afterEach(() => {
   vi.unstubAllGlobals()
