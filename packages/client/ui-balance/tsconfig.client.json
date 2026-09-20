@@ -1,0 +1,24 @@
+{
+  "extends": "../../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
+  },
+  "files": [
+    "src/balance.ts",
+    "src/client/BalanceToggle.tsx",
+    "src/client/index.ts",
+    "src/client/locale.ts",
+    "src/css-modules.d.ts"
+  ],
+  "references": [
+    { "path": "../../../vendor/schemastery" },
+    { "path": "../../../vendor/cordis" },
+    { "path": "../connection/tsconfig.client.json" },
+    { "path": "../locale" },
+    { "path": "../ui-conversation" },
+    { "path": "../ui-renderer" },
+    { "path": "../ui-slots" }
+  ]
+}
