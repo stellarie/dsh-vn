@@ -199,6 +199,15 @@ tryMembership(agent: Agent): TeamMembership | undefined
  * @returns the committed task or a typed Team rejection.
  */
 @Remote('updateTask') remoteUpdateTask(agent: Agent, request: UpdateTeamTaskRequest): Promise<TeamTaskMutationResult>
+
+/**
+ * Steer one teammate with one text line through the generated Remote API.
+ * @param agent - exact live Team member used as the authority credential.
+ * @param request - target teammate name and one text line.
+ * @param signal - caller cancellation for this invocation.
+ * @returns the durable message identity and its immediate-delivery observation.
+ */
+@Remote('sendMessage') remoteSendMessage( agent: Agent, request: SendTeamMessageTextRequest, signal: AbortSignal, ): Promise<SendTeamMessageResult>
 ```
 
 Types: [Agent](core.md)

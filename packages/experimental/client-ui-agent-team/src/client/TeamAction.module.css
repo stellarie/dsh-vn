@@ -1,12 +1,19 @@
 .root {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* The sidebar affordance, mirrored: the glyph the right column's own expand
+   control uses, pointed at the edge this control opens. */
+.mirror {
+  transform: scaleX(-1);
 }
 
 .trigger,
 .iconButton,
-.smallButton,
-.taskActions button,
-.formActions button {
+.toolbarButton {
   border: 0;
   border-radius: 6px;
   background: transparent;
@@ -25,9 +32,7 @@
 
 .trigger:hover,
 .iconButton:hover,
-.smallButton:hover,
-.taskActions button:hover,
-.formActions button:hover {
+.toolbarButton:hover {
   background: var(--dsw-alias-interactive-bg-hover);
 }
 
@@ -59,17 +64,10 @@
   box-shadow: var(--dsw-elevation-prominent);
 }
 
-.toolbar,
-.sectionTitle,
-.taskTitle,
-.taskActions,
-.formActions {
+.toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.toolbar {
   min-height: 28px;
 }
 
@@ -77,12 +75,22 @@
   flex: 1;
 }
 
-.iconButton {
+.iconButton,
+.toolbarButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 26px;
   height: 26px;
+}
+
+/* The labelled right-Sidebar entry: the same glyph as the icon-only header
+   control, spelled out because this one sits inside the dialog's toolbar. */
+.toolbarButton {
+  width: auto;
+  gap: 4px;
+  padding: 0 7px;
+  font-size: 11px;
 }
 
 .panel h3 {
@@ -122,115 +130,14 @@
   min-width: 0;
 }
 
-.memberText small,
-.meta {
+.memberText small {
   color: var(--dsw-alias-label-tertiary);
   font-size: 11px;
 }
 
 .diagnostic,
-.error,
-.warning {
+.error {
   color: var(--dsw-alias-state-error-primary);
-}
-
-.smallButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  padding: 4px 7px;
-  font-size: 11px;
-}
-
-.tasks {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.task,
-.form {
-  padding: 9px;
-  border: 0.5px solid var(--dsw-alias-border-l1);
-  border-radius: 9px;
-  background: var(--dsw-alias-bg-base);
-}
-
-.taskTitle span {
-  margin-left: auto;
-  color: var(--dsw-alias-label-tertiary);
-  font-size: 11px;
-}
-
-.task p {
-  margin: 5px 0;
-  color: var(--dsw-alias-label-secondary);
-  font-size: 12px;
-  white-space: pre-wrap;
-}
-
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 10px;
-}
-
-.taskActions {
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.taskActions label {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--dsw-alias-label-tertiary);
-  font-size: 11px;
-}
-
-.taskActions select,
-.form input,
-.form textarea {
-  box-sizing: border-box;
-  border: 0.5px solid var(--dsw-alias-border-l4);
-  border-radius: 6px;
-  background: var(--dsw-alias-bg-base);
-  color: var(--dsw-alias-label-primary);
-  font: inherit;
-}
-
-.taskActions button,
-.formActions button {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 4px 6px;
-  font-size: 11px;
-}
-
-.taskActions button:disabled,
-.formActions button:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-
-.form {
-  display: grid;
-  gap: 6px;
-  margin-bottom: 7px;
-}
-
-.form input,
-.form textarea {
-  width: 100%;
-  padding: 6px 8px;
-  font-size: 12px;
-}
-
-.form textarea {
-  min-height: 58px;
-  resize: vertical;
 }
 
 .notice,
