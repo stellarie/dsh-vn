@@ -1,0 +1,68 @@
+{
+  "extends": "../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
+  },
+  "files": [
+    "src/auth-paths.ts",
+    "src/client/ImagegenToolView.tsx",
+    "src/client/OpenAICodexFastModeToggle.tsx",
+    "src/client/OpenAICodexQuotaIndicator.tsx",
+    "src/client/OpenAICodexSettings.tsx",
+    "src/client/index.ts",
+    "src/client/locales.ts",
+    "src/credential-document.ts",
+    "src/fast-mode-paths.ts",
+    "src/oauth-provider.ts",
+    "src/proxy.ts",
+    "src/store.ts",
+    "src/tool-policy.ts",
+    "src/usage.ts"
+  ],
+  "references": [
+    {
+      "path": "../cordis"
+    },
+    {
+      "path": "../../packages/api/remotes/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/api/session-controller/tsconfig.client.json"
+    },
+    {
+      "path": "../../packages/attachment/attachment"
+    },
+    {
+      "path": "../../packages/client/locale"
+    },
+    {
+      "path": "../../packages/client/store"
+    },
+    {
+      "path": "../../packages/client/ui-conversation"
+    },
+    {
+      "path": "../../packages/client/ui-model-selection"
+    },
+    {
+      "path": "../../packages/client/ui-renderer"
+    },
+    {
+      "path": "../../packages/client/ui-session"
+    },
+    {
+      "path": "../../packages/client/ui-settings"
+    },
+    {
+      "path": "../../packages/client/ui-slots"
+    },
+    {
+      "path": "../../packages/client/ui-tool"
+    },
+    {
+      "path": "../../packages/core/session"
+    }
+  ]
+}
