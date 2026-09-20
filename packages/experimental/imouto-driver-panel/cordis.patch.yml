@@ -1,0 +1,9 @@
+# Experimental imouto-driver worker panel Web layer. Apply after dsh-web-app so the
+# browser mounts the pane; the host half registers the snapshot route from the
+# same row. Kept out of every release profile by construction.
+
+- insert:
+    - id: imouto-driver-panel
+      name: '@deepseek-ai/dsh-experimental-imouto-driver-panel'
+      config:
+        root: !!js process.env.IMOUTO_DRIVER_ROOT ?? ''
