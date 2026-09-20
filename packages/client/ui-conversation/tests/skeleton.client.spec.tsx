@@ -497,6 +497,8 @@ describe('ConversationRoot resident composer', () => {
     expect(b.slotCalls).toContain('conversation.session.header.actions')
     expect(b.slotCalls).toContain('conversation.session.header.utilities')
     expect(b.slotCalls).toContain('conversation.session.header.corner')
+    expect(b.slotCalls).toContain('conversation.background')
+    expect(b.slotCalls).toContain('conversation.composer.footer')
   })
 
   it('sticky composer seat wraps the whole overlay chain, not only the fallback stack', () => {

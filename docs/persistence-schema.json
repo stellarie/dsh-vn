@@ -28055,10 +28055,10 @@
         ]
       },
       "names": [
-        "packages/feedback/message-feedback/src/types.ts#MessageFeedbackRating"
+        "packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackRating"
       ],
       "sources": [
-        "packages/feedback/message-feedback/src/types.ts:17"
+        "packages/feedback/message-feedback/lib/types/types.d.ts:14"
       ]
     },
     {
@@ -28956,10 +28956,10 @@
         ]
       },
       "names": [
-        "packages/feedback/message-feedback/src/types.ts#MessageFeedbackItem"
+        "packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackItem"
       ],
       "sources": [
-        "packages/feedback/message-feedback/src/types.ts:20"
+        "packages/feedback/message-feedback/lib/types/types.d.ts:16"
       ]
     },
     {
@@ -32095,7 +32095,7 @@
         "packages/experimental/agent-team/src/types.ts#TeamId",
         "packages/experimental/agent-team/src/types.ts#TeamMessageId",
         "packages/experimental/agent-team/src/types.ts#TeamTaskId",
-        "packages/feedback/message-feedback/src/types.ts#MessageFeedbackVersion",
+        "packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackVersion",
         "packages/goal/goal/src/types.ts#GoalId",
         "packages/interaction/commands/src/brand.ts#CommandId",
         "packages/interaction/user-approval/src/types.ts#ApprovalRequestId",
@@ -32120,7 +32120,7 @@
         "packages/experimental/agent-team/src/types.ts:20",
         "packages/experimental/agent-team/src/types.ts:32",
         "packages/experimental/agent-team/src/types.ts:8",
-        "packages/feedback/message-feedback/src/types.ts:14",
+        "packages/feedback/message-feedback/lib/types/types.d.ts:12",
         "packages/goal/goal/src/types.ts:17",
         "packages/interaction/commands/src/brand.ts:31",
         "packages/interaction/user-approval/src/types.ts:17",
@@ -33433,7 +33433,7 @@
         ]
       },
       "names": [
-        "event:agent/inbox/spliced.data.inserted[0].source[15].references[0]"
+        "event:agent/inbox/spliced.data.inserted[0].source[14].references[0]"
       ],
       "sources": [
         "packages/context/session-reference/src/types.ts:18"
@@ -40341,10 +40341,10 @@
         ]
       },
       "names": [
-        "packages/feedback/message-feedback/src/types.ts#MessageFeedbackDelete"
+        "packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackDelete"
       ],
       "sources": [
-        "packages/feedback/message-feedback/src/types.ts:46"
+        "packages/feedback/message-feedback/lib/types/types.d.ts:40"
       ]
     },
     {
@@ -48875,10 +48875,10 @@
         ]
       },
       "names": [
-        "packages/feedback/message-feedback/src/types.ts#MessageFeedbackPut"
+        "packages/feedback/message-feedback/lib/types/types.d.ts#MessageFeedbackPut"
       ],
       "sources": [
-        "packages/feedback/message-feedback/src/types.ts:38"
+        "packages/feedback/message-feedback/lib/types/types.d.ts:33"
       ]
     },
     {
@@ -56884,7 +56884,7 @@
         ]
       },
       "names": [
-        "event:agent/inbox/spliced.data.inserted[0].source[15].references"
+        "event:agent/inbox/spliced.data.inserted[0].source[14].references"
       ],
       "sources": []
     },

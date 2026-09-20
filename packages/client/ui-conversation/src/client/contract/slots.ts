@@ -176,6 +176,8 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
     }
     /** Registered Conversation target Views, rendered one at a time. */
     'conversation.view': { kind: 'list'; scope: 'session'; owner: ConvViewOwnerProps }
+    /** Presentation layer behind the existing Conversation transcript and composer. */
+    'conversation.background': { kind: 'list'; scope: 'session' }
     /** Selector-routed replacements for the current Session's resident composer. */
     'conversation.composer': { kind: 'chain'; scope: 'session'; owner: ComposerChainProps }
     /** Workspace picker shown by the blank-session Hero. */
@@ -190,6 +192,8 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
     'conversation.input.overlay': { kind: 'list'; scope: 'session' }
     /** Ambient entries below the composer card. */
     'conversation.composer.dock': { kind: 'list'; scope: 'session' }
+    /** Presentation controls below the complete resident composer. */
+    'conversation.composer.footer': { kind: 'list'; scope: 'session-maybe' }
     /** Compact controls at the left of the composer tool row. */
     'conversation.input.left': { kind: 'list'; scope: 'session' }
     /** Compact controls before the composer submit action. */
@@ -218,6 +222,8 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
       children: {
         'conversation.session': { kind: 'single'; scope: 'session' }
         'conversation.composer': { kind: 'chain'; scope: 'session' }
+        'conversation.background': { kind: 'list'; scope: 'session' }
+        'conversation.composer.footer': { kind: 'list'; scope: 'session-maybe' }
         'conversation.composer.bar': { kind: 'single'; scope: 'session-maybe' }
         'conversation.input.dock': { kind: 'list'; scope: 'session' }
         'conversation.hero.brand.mark': { kind: 'single'; scope: 'root' }
