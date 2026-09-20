@@ -1,6 +1,6 @@
 ---
 description: "在右侧边栏面板中显示正在运行的 imouto-driver 工作进程：一条主机路由读取驱动状态目录，一个浏览器标签页展示结果。"
-kind: "package-reference"
+kind: "package-bundle"
 ---
 
 # @deepseek-ai/dsh-experimental-imouto-driver-panel
@@ -24,14 +24,16 @@ kind: "package-reference"
 <a id="use-this-package"></a>
 ## 使用本包
 
-把本包加入某个配置的 bundle 列表。它自带的补丁插入一行，同时注册两个半边；该行必须提供驱动根目录。
+把本包加入某个配置的 bundle 列表。它自带的补丁插入一行，同时注册两个半边。
 
 ```yaml
 - id: imouto-driver-panel
   name: '@deepseek-ai/dsh-experimental-imouto-driver-panel'
   config:
-    root: 'C:\Users\you\chibipop'
+    root: 'C:\projects\example'
 ```
+
+插入的行从 `IMOUTO_DRIVER_ROOT` 读取 `root`。配置补丁层可以替换该值，如上面的例子所示。`root` 缺失或无效时，配置加载失败。
 
 | 字段 | 默认值 | 含义 |
 |---|---|---|
@@ -42,9 +44,12 @@ kind: "package-reference"
 读取器也可以单独使用：
 
 ```ts
+import { homedir } from 'node:os'
 import { driverStateDirFor } from '@deepseek-ai/dsh-experimental-imouto-driver-panel/src/state-dir.ts'
 import { readDriverSnapshot } from '@deepseek-ai/dsh-experimental-imouto-driver-panel/src/reader.ts'
 
+const driverRoot = 'C:\\projects\\example'
+const home = homedir()
 const stateDir = driverStateDirFor(driverRoot, { home, platform: process.platform })
 const snapshot = readDriverSnapshot({ stateDir, maxWorkers: 32, maxTailBytes: 262_144, now: new Date().toISOString() })
 ```
@@ -82,7 +87,7 @@ const snapshot = readDriverSnapshot({ stateDir, maxWorkers: 32, maxTailBytes: 26
 ## 进一步探索
 
 - 两种格式都由驱动拥有：`imouto-driver/src/runtime/store.ts`（工作进程记录）与 `imouto-driver/src/runtime/events.ts`（事件流）。
-- 决策记录是任务黑板工作目录中的 W003 调查文件。
+- [Agent Teams 浏览器界面](../client-ui-agent-team/README.zh.md) —— 同一个右侧边栏位置，展示 Team 成员。
 
 <a id="model-experience"></a>
 ## 模型体验

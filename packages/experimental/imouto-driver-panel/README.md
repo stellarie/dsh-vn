@@ -1,6 +1,6 @@
 ---
 description: "Show the live imouto-driver workers in a right-sidebar pane: one host route over the driver state directory and one browser tab."
-kind: "package-reference"
+kind: "package-bundle"
 ---
 
 # @deepseek-ai/dsh-experimental-imouto-driver-panel
@@ -24,14 +24,16 @@ English | [中文](README.zh.md)
 <a id="use-this-package"></a>
 ## Use this package
 
-Add the package to a profile's bundle list. Its own patch inserts one row, which registers both halves; the row requires the driver root.
+Add the package to a profile's bundle list. Its own patch inserts one row, which registers both halves.
 
 ```yaml
 - id: imouto-driver-panel
   name: '@deepseek-ai/dsh-experimental-imouto-driver-panel'
   config:
-    root: 'C:\Users\you\chibipop'
+    root: 'C:\projects\example'
 ```
+
+The inserted row reads `root` from `IMOUTO_DRIVER_ROOT`. A profile patch layer replaces that value, as in the example above. An absent or invalid `root` fails the profile load.
 
 | Field | Default | Meaning |
 |---|---|---|
@@ -42,9 +44,12 @@ Add the package to a profile's bundle list. Its own patch inserts one row, which
 The reader is also usable on its own:
 
 ```ts
+import { homedir } from 'node:os'
 import { driverStateDirFor } from '@deepseek-ai/dsh-experimental-imouto-driver-panel/src/state-dir.ts'
 import { readDriverSnapshot } from '@deepseek-ai/dsh-experimental-imouto-driver-panel/src/reader.ts'
 
+const driverRoot = 'C:\\projects\\example'
+const home = homedir()
 const stateDir = driverStateDirFor(driverRoot, { home, platform: process.platform })
 const snapshot = readDriverSnapshot({ stateDir, maxWorkers: 32, maxTailBytes: 262_144, now: new Date().toISOString() })
 ```
@@ -82,7 +87,7 @@ The two halves meet at one authenticated route. The host registers `GET /api/imo
 ## Further Exploration
 
 - The driver owns both formats: `imouto-driver/src/runtime/store.ts` (worker records) and `imouto-driver/src/runtime/events.ts` (the event stream).
-- The driving decision record is the W003 findings file in the task blackboard work directory.
+- [Agent Teams browser UI](../client-ui-agent-team/README.md) — the same right-sidebar seat for Team members.
 
 <a id="model-experience"></a>
 ## Model Experience

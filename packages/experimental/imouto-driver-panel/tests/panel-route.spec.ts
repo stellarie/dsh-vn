@@ -71,14 +71,14 @@ function driverState(stateHome: string, root: string, files: Readonly<Record<str
 
 describe('Config', () => {
   it('requires the driver root and applies the read bounds', () => {
-    const value = Config({ root: 'C:\\drivers\\chibipop' })
-    expect(value.root).toBe('C:\\drivers\\chibipop')
+    const value = Config({ root: 'C:\\drivers\\example' })
+    expect(value.root).toBe('C:\\drivers\\example')
     expect(value.maxWorkers).toBe(32)
     expect(value.maxTailBytes).toBe(262_144)
   })
 
   it('rejects a root that is not an absolute path', () => {
-    expect(() => Config({ root: 'drivers/chibipop' })).toThrow()
+    expect(() => Config({ root: 'drivers/example' })).toThrow()
   })
 
   it('rejects a root that names no directory', () => {
@@ -88,7 +88,7 @@ describe('Config', () => {
 
 describe('apply', () => {
   it('registers one authenticated GET route', () => {
-    const config = Config({ root: 'C:\\drivers\\chibipop' })
+    const config = Config({ root: 'C:\\drivers\\example' })
     const { ctx, route } = routeContext()
     apply(ctx as never, config)
     expect(route().path).toBe(PANEL_PATH)
@@ -98,7 +98,7 @@ describe('apply', () => {
   it('answers the bounded worker snapshot as JSON', async () => {
     const home = mkdtempSync(join(tmpdir(), 'imouto-panel-home-'))
     created.push(home)
-    const root = 'C:\\drivers\\chibipop'
+    const root = 'C:\\drivers\\example'
     const previous = process.env.IMOUTO_STATE_HOME
     process.env.IMOUTO_STATE_HOME = home
     try {
@@ -142,7 +142,7 @@ describe('apply', () => {
   it('bounds the roster to the configured worker count', async () => {
     const home = mkdtempSync(join(tmpdir(), 'imouto-panel-home-'))
     created.push(home)
-    const root = 'C:\\drivers\\chibipop'
+    const root = 'C:\\drivers\\example'
     const previous = process.env.IMOUTO_STATE_HOME
     process.env.IMOUTO_STATE_HOME = home
     try {
