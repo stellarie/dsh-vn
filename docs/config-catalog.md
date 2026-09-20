@@ -446,6 +446,24 @@ export interface Config {
 
 Source: [`packages/client/hmr/src/index.ts:30`](../packages/client/hmr/src/index.ts)
 
+<a id="deepseek-aidsh-client-ui-balance"></a>
+
+## `@deepseek-ai/dsh-client-ui-balance`
+
+```ts config-catalog
+/** Host configuration for the balance readout. */
+export interface Config {
+  /** Provider API root serving the balance endpoint. */
+  baseURL?: string
+  /** Credential reference holding the API key. */
+  apiKeyRef?: string
+  /** How long one provider read stays current. */
+  cacheMs?: number
+}
+```
+
+Source: [`packages/client/ui-balance/src/index.ts:20`](../packages/client/ui-balance/src/index.ts)
+
 <a id="deepseek-aidsh-client-ui-sidebar-documentpreview"></a>
 
 ## `@deepseek-ai/dsh-client-ui-sidebar-documentpreview`
@@ -704,6 +722,24 @@ export interface Config {
 Depends on: [`McpClient`](../packages/mcp/mcp-client/src/index.ts)
 
 Source: [`packages/experimental/computer-use-cua-driver-mcp/src/index.ts:20`](../packages/experimental/computer-use-cua-driver-mcp/src/index.ts)
+
+<a id="deepseek-aidsh-experimental-imouto-driver-panel"></a>
+
+## `@deepseek-ai/dsh-experimental-imouto-driver-panel`
+
+```ts config-catalog
+/** Host configuration for the driver worker panel. */
+export interface Config {
+  /** Absolute driver root whose per-project state directory the panel reads. */
+  root: string
+  /** Maximum worker rows one request answers. */
+  maxWorkers?: number
+  /** Maximum trailing bytes of the activity stream one request scans. */
+  maxTailBytes?: number
+}
+```
+
+Source: [`packages/experimental/imouto-driver-panel/src/index.ts:30`](../packages/experimental/imouto-driver-panel/src/index.ts)
 
 <a id="deepseek-aidsh-experimental-inspector"></a>
 
@@ -3819,6 +3855,7 @@ These load from a `cordis.yml` entry with no `config:` block; they declare no co
 - `@deepseek-ai/dsh-client-ui-renderer` ([`packages/client/ui-renderer/src/index.ts`](../packages/client/ui-renderer/src/index.ts))
 - `@deepseek-ai/dsh-client-ui-schedule` ([`packages/client/ui-schedule/src/index.ts`](../packages/client/ui-schedule/src/index.ts))
 - `@deepseek-ai/dsh-client-ui-session` ([`packages/client/ui-session/src/index.ts`](../packages/client/ui-session/src/index.ts))
+- `@deepseek-ai/dsh-client-ui-session-cards` ([`packages/client/ui-session-cards/src/index.ts`](../packages/client/ui-session-cards/src/index.ts))
 - `@deepseek-ai/dsh-client-ui-settings` ([`packages/client/ui-settings/src/index.ts`](../packages/client/ui-settings/src/index.ts))
 - `@deepseek-ai/dsh-client-ui-settings-general` ([`packages/client/ui-settings-general/src/index.ts`](../packages/client/ui-settings-general/src/index.ts))
 - `@deepseek-ai/dsh-client-ui-settings-models` ([`packages/client/ui-settings-models/src/index.ts`](../packages/client/ui-settings-models/src/index.ts))
