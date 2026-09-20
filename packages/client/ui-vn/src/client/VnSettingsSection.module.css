@@ -1,0 +1,94 @@
+/* Visual-novel Settings page: one row per preference, then one row per state image. */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 760px;
+  color: var(--dsw-alias-label-primary);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+}
+
+.label {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.row input[type='range'],
+.row select,
+.percent {
+  width: min(320px, 60%);
+}
+
+.row select {
+  height: 32px;
+  padding: 0 8px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 13px;
+}
+
+.percent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.percent input {
+  width: 72px;
+  height: 32px;
+  padding: 0 8px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 13px;
+  text-align: right;
+}
+
+.images {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.imageRow {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.imageRow input[type='file'] {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 13px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.status {
+  min-height: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--dsw-alias-state-error-primary);
+}
+
+@media (max-width: 560px) {
+  .imageRow {
+    grid-template-columns: 1fr;
+  }
+}

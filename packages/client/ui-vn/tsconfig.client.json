@@ -6,11 +6,12 @@
     "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
   },
   "files": [
+    "src/client/fonts.ts",
     "src/client/index.ts",
     "src/client/locale.ts",
     "src/client/state.ts",
     "src/client/VnPresentation.tsx",
-    "src/css.d.ts",
+    "src/css-modules.d.ts",
     "src/protocol.ts",
     "src/vn-settings.ts"
   ],
@@ -21,6 +22,7 @@
     { "path": "../locale" },
     { "path": "../ui-chat" },
     { "path": "../ui-conversation" },
+    { "path": "../ui-primitives" },
     { "path": "../ui-renderer" },
     { "path": "../ui-session" },
     { "path": "../ui-settings" },

@@ -7,7 +7,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import type {} from '@deepseek-ai/dsh-client-ui-session/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import { VN_SETTINGS_NAMESPACE, type VnSettings } from '../vn-settings.ts'
-import { VnControls, VnStage } from './VnPresentation.tsx'
+import { VnSettingsSection, VnStage } from './VnPresentation.tsx'
 import { en, NS, zh } from './locale.ts'
 
 export const inject = ['slots', 'settingsScope', 'locale']
@@ -20,10 +20,12 @@ export function apply(ctx: Context): void {
     name: 'conversation.background', id: 'vn-stage', order: 0,
     inject: () => ({ settings, t }),
   }, VnStage))
-  ctx.slots.inject('conversation.composer.footer', () => ctx.slots.register({
-    name: 'conversation.composer.footer', id: 'vn-controls', order: 100,
+  ctx.slots.inject('settings.section', () => ctx.slots.register({
+    name: 'settings.section', id: 'visual-novel', order: 12,
+    label: () => t('title'),
+    locale: NS,
     inject: () => ({ settings, t }),
-  }, VnControls))
+  }, VnSettingsSection))
 }
 
 export { deriveVnState } from './state.ts'
