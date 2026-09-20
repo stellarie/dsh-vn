@@ -21,6 +21,7 @@ Upstream workspace: `cordis-workspace` (local checkout: `~/repos/cordis-workspac
 | `timer/` | `@deepseek-ai/cordis-plugin-timer` | `@cordisjs/plugin-timer` | 1.1.2 | https://github.com/deepseek-harness/cordis (`packages/timer`) | `abb0a307cb1d3b0947f455d590cf5ba922d4caa4` |
 | `hmr/` | `@deepseek-ai/cordis-plugin-hmr` | `@cordisjs/plugin-hmr` | 1.0.15 | https://github.com/deepseek-harness/cordis (`packages/hmr`) | `abb0a307cb1d3b0947f455d590cf5ba922d4caa4` |
 | `logger-console/` | `@deepseek-ai/cordis-plugin-logger-console` | `@cordisjs/plugin-logger-console` | 1.0.0 | https://github.com/deepseek-harness/cordis (`packages/logger-console`) | `abb0a307cb1d3b0947f455d590cf5ba922d4caa4` |
+| `imouto-codex/` | `@stellarie/dsh-imouto-codex` | `dsh-imouto-codex` | 0.1.0 | https://github.com/stellarie/imouto-dev (`packages/dsh-imouto-codex`) | `79a76eed37ce21f9406051b0bc46c53db931e3dd` |
 
 Third-party dependencies of the vendored packages stay on npm: `@standard-schema/spec`, `js-yaml`, `chokidar`, `picomatch`, `@babel/code-frame`, `supports-color`, `node-addon-require-builtin`.
 
@@ -53,6 +54,7 @@ Keep this log exhaustive — every divergence from upstream must be listed.
 20. **`loader/src/config/entry.ts` fiber identity**: stores the original fiber from the registry result’s context instead of its PromiseLike wrapper. Configuration updates and service notifications therefore mutate the same lifecycle state; updating a provider and consumer together cannot strand the consumer in `PENDING`. Covered by `packages/boot/hmr/tests/modules.spec.ts` and the built profile reload regression in `apps/cli/tests/built-bin.e2e.ts`.
 
 21. **`cordis/src/logger.ts` exporter disposal**: each disposer retains its registration id, so removing an earlier exporter cannot delete a later console or telemetry exporter. Covered by startup collector cleanup in `packages/boot/app-boot/tests/app-boot.spec.ts` and disabled-feedback output in `packages/session/session-telemetry-otel/tests/loader-composition.e2e.ts`.
+22. **`imouto-codex` Harness integration**: renamed the package to the `@deepseek-ai` scope, replaced Harness dependencies with workspace ranges, removed its standalone bin and empty invariant companion, split Host and Client TypeScript faces, adopted the shared Client bundle configuration, localized browser copy, and added Harness package documentation. The Apache-2.0 license remains unchanged.
 
 ## Sync procedure
 

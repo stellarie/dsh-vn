@@ -1,0 +1,6 @@
+- id: agent-presets
+  config:
+    default: standard
+    roots:
+      - path: !!js "process.getBuiltinModule('node:url').fileURLToPath(new URL('presets/', process.getBuiltinModule('node:url').pathToFileURL(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@deepseek-ai/dsh-experimental-imouto-dev-profile/package.json'))))"
+        trust: system
