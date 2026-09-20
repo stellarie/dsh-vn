@@ -3,30 +3,68 @@
   inset: 0;
   background-position: center;
   background-size: cover;
-  transition: background-image 180ms ease-in-out;
 }
 
+/* The incoming state image: it fades in above the image already on screen, so
+   a change never exposes an unpainted stage. */
+.dsh-vn-fade {
+  position: absolute;
+  inset: 0;
+  animation-name: vn-state-fade-in;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes vn-state-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Reduced motion keeps the newcomer; it just arrives without the fade. */
+@media (prefers-reduced-motion: reduce) {
+  .dsh-vn-fade { animation: none; }
+}
+
+/* The transcript panel: VN mode makes it translucent and blurred, so the stage
+   reads through the conversation. */
 [data-conversation-content]:has([data-vn-stage]) [data-conversation-scroll] {
-  font-family: var(--vn-font-family, system-ui, sans-serif);
   background: color-mix(in srgb, var(--dsw-alias-bg-base) calc(var(--vn-panel-opacity, .78) * 100%), transparent);
   backdrop-filter: blur(var(--vn-panel-blur, 12px));
 }
 
-.dsh-vn-controls {
-  align-self: flex-end;
-  margin: 4px 16px 8px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--dsw-alias-bg-base) 88%, transparent);
-  font-size: 12px;
+/* Translucent chat surfaces. Each shipped token is captured one level above
+   the surface that overrides it, so no declaration reads its own property. */
+[data-conversation-content]:has([data-vn-stage]) {
+  --vn-base-input: var(--dsw-specific-input-major);
+  --vn-base-user: var(--dsw-specific-bubble);
+  --vn-base-file: var(--dsw-alias-markdown-code-block);
+  --vn-base-header: var(--dsw-alias-markdown-code-block-banner);
 }
 
-.dsh-vn-controls[open] { display: grid; gap: 8px; width: min(520px, calc(100% - 32px)); }
-.dsh-vn-images { display: grid; gap: 4px; }
-.dsh-vn-images label { display: grid; grid-template-columns: 70px 1fr auto; align-items: center; gap: 8px; }
-.dsh-vn-status { color: var(--dsw-alias-state-error-primary); }
-@media (max-width: 560px) {
-  .dsh-vn-images label { grid-template-columns: 1fr; }
-  .dsh-vn-images input[type='file'] { min-width: 0; max-width: 100%; }
+[data-conversation-content]:has([data-vn-stage]) [data-composer-card] {
+  --dsw-specific-input-major: color-mix(in srgb, var(--vn-base-input) var(--vn-input-opacity, 100%), transparent);
 }
-@media (prefers-reduced-motion: reduce) { .dsh-vn-stage { transition: none; } }
+
+[data-conversation-content]:has([data-vn-stage]) [data-chat-flow-kind='user'] {
+  --dsw-specific-bubble: color-mix(in srgb, var(--vn-base-user) var(--vn-user-opacity, 100%), transparent);
+}
+
+[data-conversation-content]:has([data-vn-stage]) [data-conversation-scroll] {
+  --dsw-alias-markdown-code-block: color-mix(in srgb, var(--vn-base-file) var(--vn-file-opacity, 100%), transparent);
+  --dsw-alias-markdown-code-block-banner: color-mix(in srgb, var(--vn-base-header) var(--vn-header-opacity, 100%), transparent);
+}
+
+/* The Chat's own back-to-bottom control bounces while VN mode is on. It is
+   already rendered only while the transcript can still move down. */
+[data-conversation-content]:has([data-vn-stage]) [data-chat-to-bottom] {
+  animation: vn-to-bottom-bounce 1.4s ease-in-out infinite;
+}
+
+@keyframes vn-to-bottom-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-conversation-content]:has([data-vn-stage]) [data-chat-to-bottom] { animation: none; }
+}
