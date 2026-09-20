@@ -46,6 +46,13 @@ describe('Yuu preset manifest', () => {
 })
 
 describe('Yuu preset portability', () => {
+  it('loads the TypeScript imouto-driver entry through tsx', () => {
+    const config = fs.readFileSync(path.join(presetRoot, 'agent.cordis.yml'), 'utf8')
+    expect(config).toContain('command: !!js "process.execPath"')
+    expect(config).toContain('- --import\n      - tsx/esm')
+    expect(config).toContain('IMOUTO_DRIVER_ENTRY is required for imouto-yuu')
+  })
+
   it('carries no absolute host path', () => {
     const offenders = presetFiles(presetRoot).filter(file => absoluteHostPath.test(fs.readFileSync(file, 'utf8')))
     expect(offenders).toEqual([])

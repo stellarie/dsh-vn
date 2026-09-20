@@ -36,6 +36,7 @@ This fork preserves DeepSeek Harness behavior while adding an optional visual-no
 
 - Large data URLs in settings enlarge every settings read and write. Use managed asset references. [status: active] [verified: 2026-09-20] [source: C:/Users/Stella/notes/blackboard/dsh-vn-ui.work/W001-akari-explore.md]
 - Direct image paths fail across browser, Desktop, and remote Host contexts. Use authenticated asset routes. [status: active] [verified: 2026-09-20] [source: C:/Users/Stella/notes/blackboard/dsh-vn-ui.work/W001-akari-explore.md]
+- Plain Node cannot execute the TypeScript imouto-driver entry. Launch it with `--import tsx/esm`. [status: active] [verified: 2026-09-20] [source: packages/experimental/imouto-dev-profile/presets/yuu/agent.cordis.yml]
 
 ## Decisions
 
