@@ -1,0 +1,52 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dsw-space-2, 8px);
+  margin: 0;
+  padding: var(--dsw-space-2, 8px);
+  list-style: none;
+  overflow-y: auto;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  border: 1px solid var(--dsw-color-border, rgba(128, 128, 128, 0.3));
+  border-radius: 6px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.status {
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.goal {
+  font-size: 0.9em;
+  opacity: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.activity {
+  font-size: 0.8em;
+  opacity: 0.65;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  margin: 0;
+  padding: var(--dsw-space-3, 12px);
+  opacity: 0.75;
+}
