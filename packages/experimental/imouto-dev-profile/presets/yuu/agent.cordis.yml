@@ -120,6 +120,8 @@
     failOnStartupError: true
     command: !!js "process.execPath"
     args:
+      - --import
+      - tsx/esm
       - !!js "(() => { const fs = process.getBuiltinModule('node:fs'); const value = process.env.IMOUTO_DRIVER_ENTRY; if (!value) throw new Error('IMOUTO_DRIVER_ENTRY is required for imouto-yuu'); fs.accessSync(value, fs.constants.R_OK); return value })()"
 
 # ── goals ───────────────────────────────────────────────────────────────────
