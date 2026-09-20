@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import type { SessionId } from '@deepseek-ai/dsh-session/types'
 import type {
   TeamTaskId, TeamTaskView as TeamTask, TeamView,
@@ -85,6 +85,7 @@ function actions(overrides: Partial<TeamActionInjected> = {}): TeamActionInjecte
       value: { ok: true, value: { ...task, revision: 2 } },
     }),
     openTeammate: () => Promise.resolve(),
+    openStack: () => {},
     ...overrides,
   }
 }
@@ -116,6 +117,22 @@ describe('TeamAction', () => {
       expect(screen.getByText('Next session task')).toBeTruthy()
       expect(screen.queryByText('Implement runtime')).toBeNull()
     })
+  })
+
+  it('offers a labelled Open in sidebar control beside Refresh Team', async () => {
+    const openStack = vi.fn()
+    render(<TeamAction {...props(actions({ openStack }))} />)
+    fireEvent.click(screen.getByRole('button', { name: /Agent Team/u }))
+    const dialog = await screen.findByRole('dialog')
+
+    const labelled = within(dialog).getByRole('button', { name: zh.openInSidebar })
+    expect(labelled.textContent).toContain(zh.openInSidebar)
+    // Refresh keeps its own place in the toolbar.
+    expect(within(dialog).getByRole('button', { name: zh.refresh })).toBeTruthy()
+
+    fireEvent.click(labelled)
+    expect(openStack).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('dialog')).toBeTruthy()
   })
 
   it('loads roster/task diagnostics on open and navigates a healthy teammate', async () => {

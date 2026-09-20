@@ -434,6 +434,12 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
         parameters: [{ name: 'agent', description: 'exact live Team member authorizing the mutation.' }, { name: 'request', description: 'task identity, expected revision, action, and action fields.' }],
         returns: 'the committed task or a typed Team rejection.',
       },
+      {
+        signature: '@Remote(\'sendMessage\') remoteSendMessage( agent: Agent, request: SendTeamMessageTextRequest, signal: AbortSignal, ): Promise<SendTeamMessageResult>',
+        description: 'Steer one teammate with one text line through the generated Remote API.',
+        parameters: [{ name: 'agent', description: 'exact live Team member used as the authority credential.' }, { name: 'request', description: 'target teammate name and one text line.' }, { name: 'signal', description: 'caller cancellation for this invocation.' }],
+        returns: 'the durable message identity and its immediate-delivery observation.',
+      },
     ],
   },
   {
@@ -5663,6 +5669,10 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   {
     name: 'SendTeamMessageResult',
     declaration: 'export interface SendTeamMessageResult {\n    readonly messageId: TeamMessageId;\n    readonly status: \'accepted\' | \'queued\';\n}',
+  },
+  {
+    name: 'SendTeamMessageTextRequest',
+    declaration: 'export interface SendTeamMessageTextRequest {\n    readonly target: string;\n    readonly text: string;\n}',
   },
   {
     name: 'ServerResponse',

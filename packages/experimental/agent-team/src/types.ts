@@ -168,6 +168,15 @@ export interface SendTeamMessageResult {
   readonly status: 'accepted' | 'queued'
 }
 
+/**
+ * Input for one peer text message from a browser caller, which supplies no
+ * cancellation of its own.
+ */
+export interface SendTeamMessageTextRequest {
+  readonly target: string
+  readonly text: string
+}
+
 /** Input for creating one shared task. */
 export interface CreateTeamTaskRequest {
   readonly subject: string
