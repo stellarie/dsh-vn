@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/experimental/imouto-driver-panel/README.md
-README.md: 63cb34af3f9ddfda605d783def372c7eaba4ec12
-README.zh.md: dd443c2cea518c87fd03a2f65498a1074ff6d31b
+README.md: 41e6cea5d3f735b0164d8d0500aa152bc1e2cd77
+README.zh.md: 0b047522d47d8bf9a2423c575e13b194190da78a

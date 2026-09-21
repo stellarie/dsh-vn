@@ -71,6 +71,8 @@ const snapshot = readDriverSnapshot({ stateDir, maxWorkers: 32, maxTailBytes: 26
 
 两个半边在一条需认证的路由上汇合。主机注册 `GET /api/imouto-driver-panel/snapshot`，按需读取并返回 JSON。浏览器标签页每三秒轮询一次，因此不需要主机定时器，也不需要推送通道。
 
+本包不发布运行时不变式伴随包，因为它不持有可变投影：每个答案都在调用时从驱动的文件推导，两处注册都随挂载它的 fiber 一起释放。
+
 ### 源码索引
 
 | 文件 | 职责 |
