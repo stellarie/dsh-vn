@@ -7,7 +7,7 @@ kind: "package-reference"
 
 [English](README.md) | 中文
 
-## 摘要
+## 概述
 
 `dsh-client-ui-balance` 在输入框下方添加一个开关，用于显示账户的充值余额。主机使用已配置的凭据读取服务商余额，浏览器不会收到密钥。
 
