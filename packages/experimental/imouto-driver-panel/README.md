@@ -71,6 +71,8 @@ Both bounds are enforced on the complete value: `maxWorkers` caps the roster and
 
 The two halves meet at one authenticated route. The host registers `GET /api/imouto-driver-panel/snapshot`, which reads on demand and answers JSON. The browser tab polls it every three seconds, so no host timer and no push channel are needed.
 
+No runtime invariant companion is published because the package owns no mutable projection: every answer derives from the driver's files at call time, and both registrations are disposed with the mounting fiber.
+
 ### Source map
 
 | File | Role |
