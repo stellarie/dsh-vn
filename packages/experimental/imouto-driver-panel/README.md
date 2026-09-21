@@ -18,6 +18,7 @@ English | [中文](README.zh.md)
 - [Further Exploration](#further-exploration)
 - [Model Experience](#model-experience)
 - [Known Limitations and Deferred Work](#known-limitations-and-deferred-work)
+- [Dev Note](#dev-note)
 
 -----
 
@@ -108,10 +109,20 @@ None. The package appends nothing, so no cached prefix changes.
 
 ## Known Limitations and Deferred Work
 
-- **No shipped profile lists it.** The mount surface is a profile's `dsh.profile.bundles` list plus a dependency entry, because a bare row cannot resolve undeclared. The live `imouto-yuu` profile is user-owned state outside this repository, and it links a different checkout.
+- **No shipped profile lists it.** The mount surface is a profile's `dsh.profile.bundles` list plus a dependency entry, because a bare row cannot resolve undeclared.
 - **Read-only.** The pane shows workers; it cannot steer one. Steering needs the driver's `send` tool, which the browser cannot call.
 - **Polling, not push.** The driver publishes no DSH channel, so the pane polls every three seconds. A worker that starts and finishes inside one interval can be missed entirely.
 - **No stored offset.** Each snapshot re-reads the trailing window rather than resuming from a byte offset, so a poll costs the window size instead of the appended bytes. Shrinking or replaced files need no special handling.
 - **Whole-record parse.** A worker record is parsed in full, including its conversation history, because the driver writes it as one JSON document. `maxWorkers` bounds the count; a per-record byte cap is deferred.
-- **Unverified against a live driver.** The reader and the pane are tested over synthetic state directories and a stubbed route. Neither has been exercised against a live driver state directory in a browser session.
+- **The pane body is not visually confirmed.** The host read answered the snapshot route from a mounted profile against a live driver state directory. The browser tab has not been rendered against that driver in a session.
 - **The root has no working default.** A bundle patch cannot know a deployment's driver root, so the row must supply one. A missing root fails at config validation instead of mounting a pane that reads nothing.
+
+<a id="dev-note"></a>
+### Dev Note
+
+<details>
+<summary>Working context for maintainers — click to expand</summary>
+
+None.
+
+</details>
