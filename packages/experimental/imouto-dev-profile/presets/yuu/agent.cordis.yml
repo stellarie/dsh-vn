@@ -67,6 +67,13 @@
   name: '@deepseek-ai/dsh-agent-instructions'
   config:
     maxBytes: 65536
+    # Yuu's sessions load `AGENTS.md` files only. The default candidate list also
+    # carries `CLAUDE.md`, which belongs to Chloe's runtime, so a Yuu session would
+    # inject another imouto's persona alongside this preset's.
+    instructionFileCandidates:
+      - AGENTS.md
+    localInstructionFileCandidates:
+      - AGENTS.local.md
 
 # ── shell ───────────────────────────────────────────────────────────────────
 
