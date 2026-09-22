@@ -23,7 +23,8 @@ sessions therefore load different skills for one name.
 
 A synthesized skill must own a name that wins at the lowest rank that can hold
 it. A personal file shadows a package skill in one session and does not shadow
-it in another.
+it in another. When two roots tie at one rank, find the deployment's tie rule
+before merging. Do not guess it.
 
 ## Stage 0 - Inventory
 
@@ -91,6 +92,10 @@ file. Retire the old skills only after that check passes.
 Give oniichan the before and after catalog, every trigger that moved, the
 retired list, and the rollback path. Name every trigger that lost an entry
 point.
+
+Include the measured rank table, because exit item 2 rests on it. Include the
+independent verdicts and the adversarial result, because exit item 3 rests on
+them.
 
 ## Exit contract
 
