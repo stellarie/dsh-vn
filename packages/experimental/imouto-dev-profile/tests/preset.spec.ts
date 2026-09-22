@@ -31,7 +31,7 @@ describe('Yuu preset manifest', () => {
   })
 
   it('ships exactly the packaged preset skills', () => {
-    const shipped = fs.readdirSync(skillsRoot).filter(entry => !entry.endsWith('.retired.md')).sort()
+    const shipped = fs.readdirSync(skillsRoot).filter(entry => !entry.endsWith('.retired')).sort()
     expect(shipped).toEqual(packagedSkills)
   })
 
