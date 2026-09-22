@@ -40,7 +40,7 @@ answer for each, with a reason tied to this task.
 - `subimouto-dev` - a delegation procedure, not a transport. It runs on the
   native or the driver route, so record the route it uses.
 
-**Mode**
+**Mode.** Record `execution_mode` as one of these.
 
 - `solo` - Yuu does the work. No workers.
 - `delegated` - workers run, and oniichan approves the contract, slice, and

@@ -117,7 +117,8 @@ Then stop. Name the next step: `imouto-plan` locks the plan at `ready`.
 Every path ends with oniichan's approval of what was presented.
 
 - **Spike** - the question and the probe plan were presented, the probe ran, and
-  the answer is reported. Items 3, 4, and 6 below do not apply.
+  the answer is reported. Items 2, 3, 4, and 6 below do not apply, because a
+  spike designs nothing.
 - **Bounded** - the questions that matter were asked, the short design was
   presented in chat, and oniichan approved it. Items 4 and 6 do not apply,
   because a bounded task carries no design document.
