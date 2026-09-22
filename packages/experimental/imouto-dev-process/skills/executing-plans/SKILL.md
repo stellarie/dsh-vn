@@ -27,15 +27,18 @@ not start.
 Ask both questions in one message, and wait for the answer. Recommend one
 answer for each, with a reason tied to this task.
 
-**Transport**
+**Transport.** The frontmatter field `coordination_transport` accepts `native`,
+`discord`, or `driver`.
 
-- `imouto-agent-team` - native DSH teammates and the shared task board.
-  Record `coordination_transport: native`.
-- `imouto-driver` - MCP workers through the spawn, send, and tuck tools.
-  Record `coordination_transport: driver`. The parent writes each work file
-  from the worker's mail. The worker never writes the blackboard.
-- `subimouto-dev` - bounded delegation under that skill's patterns. Record
-  the transport it uses.
+- `imouto-agent-team` - native DSH teammates and the shared task board. Record
+  `coordination_transport: native`.
+- `imouto-driver` - MCP workers through the spawn, send, and tuck tools. Record
+  `coordination_transport: driver`. The parent writes each work file from the
+  worker's mail. The worker never writes the blackboard.
+- `discord` - the Arisucord control plane. Record it only when that runner is
+  the selected route.
+- `subimouto-dev` - a delegation procedure, not a transport. It runs on the
+  native or the driver route, so record the route it uses.
 
 **Mode**
 
@@ -94,7 +97,8 @@ minutes: write the failing test, run it, make it pass, run it again, commit.
 - Check merge conflicts without merging.
 - Record every skipped or unavailable gate with its reason.
 - Report a baseline failure as a baseline, with fresh evidence.
-- Mark a `[manual]` item only when a Review round records the run.
+- Mark a `[manual]` item only when a Review round in the task file records the
+  run, the platform, and the date.
 - Claim `done` only with a recorded artifact: a commit, a branch, or
   `uncommitted {path}`.
 
@@ -105,6 +109,16 @@ minutes: write the failing test, run it, make it pass, run it again, commit.
 3. Confirm that no worker and no background job remains active.
 4. Promote or reject the memory candidates and the skill drafts.
 5. Name the residual uncertainty and every unverified item.
+
+## Exit contract
+
+1. The transport and the mode are recorded in the task frontmatter.
+2. Every work item has a writer, a write scope, and a result.
+3. Every worker appears in the Subimoutos section.
+4. Every gate ran, or carries a recorded reason and a baseline check.
+5. Every `[manual]` item appears in a Review round, or the task stays
+   `verifying`.
+6. The task carries an artifact: a commit, a branch, or `uncommitted {path}`.
 
 ## Non-goals
 

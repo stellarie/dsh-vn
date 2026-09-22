@@ -114,11 +114,20 @@ Then stop. Name the next step: `imouto-plan` locks the plan at `ready`.
 
 ## Exit contract
 
+Every path ends with oniichan's approval of what was presented.
+
+- **Spike** - the question and the probe plan were presented, the probe ran, and
+  the answer is reported. Items 3, 4, and 6 below do not apply.
+- **Bounded** - the questions that matter were asked, the short design was
+  presented in chat, and oniichan approved it. Items 4 and 6 do not apply,
+  because a bounded task carries no design document.
+- **Architectural** - every item below holds.
+
 1. The path was announced with a reason.
 2. The questions that change the design were asked and answered.
 3. Approaches were presented with one recommendation.
-4. A prototype, a clip, a still, or a diagram was shown. Otherwise the
-   reason it cannot be shown is recorded.
+4. A prototype, a clip, a still, or a diagram was shown. Otherwise the reason it
+   cannot be shown is recorded, and the record names where it is written.
 5. Oniichan approved the design explicitly.
 6. The design sits in the blackboard task file at `planning`.
 7. The next step is named.
