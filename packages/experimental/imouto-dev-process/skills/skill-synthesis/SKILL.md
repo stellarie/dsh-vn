@@ -67,11 +67,14 @@ did not write the skill.
 1. **Rank rule.** Check the measured rank of every root that holds a merged or
    retired name. A merge that assumes the wrong rank fails in one direction and
    destroys a package skill in the other.
-2. **Archive rule.** Retire a body to `<root>/.retired/<name>.md`. The file is
-   not named `SKILL.md`, so discovery cannot load it. Rollback is a file restore
-   and a commit revert.
+2. **Archive rule.** Retire a body to `<root>/{name}.retired.md`. The archive is
+   a file, not a directory, because a scanned root reads `SKILL.md` from every
+   directory it holds. A directory there breaks the catalog test. Rollback is a
+   file restore and a commit revert.
 3. **Absorption contract.** Every normative sentence of a retired skill appears
-   in the merged body, or appears in the retirement record with a reason.
+   in the merged body, or in the retirement record with a reason. The retirement
+   record is one Thread entry in the owning blackboard task. It lists each
+   retired skill and each sentence that was dropped.
 4. **Reference check.** Grep every skill body, every `AGENTS.md`, the blackboard,
    and the presets for a retired name before the deletion.
 
@@ -102,8 +105,8 @@ point.
 
 ## Non-goals
 
-- No new doctrine. Synthesis recombines rules that already exist. Use the
-  harvest procedure for a new rule.
+- No new doctrine. Synthesis recombines rules that already exist. A new rule
+  needs the promotion procedure of the deployment.
 - No authoring from scratch. Use the skill-authoring standard of the
   deployment.
 - No deletion in a package root. That is a package change with repository gates.
