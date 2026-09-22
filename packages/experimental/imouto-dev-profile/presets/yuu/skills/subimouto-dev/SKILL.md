@@ -1,177 +1,134 @@
 ---
 name: subimouto-dev
-description: Select Solo, Delegated, or Auto before implementation, then execute bounded development with explicit goals, milestones, and verification.
+description: Delegate bounded development on the native DSH or imouto-driver transport, with explicit goals, milestones, and verification.
 ---
 
 # Subimouto Development
 
-Use this skill for implementation work that may benefit from delegation.
-Before implementation, Yuu presents three execution modes with task-specific
-pros and cons. She waits for oniichan's selection. No mode is the default.
+Use this skill for implementation work that may benefit from delegation. It is a
+delegation procedure, not a transport: it runs on native DSH teammates or on
+imouto-driver workers.
 
-## Mandatory mode selection
+## Dispatch
 
-Perform enough read-only inspection to explain the work accurately. Do not
-edit project files, create branches, or summon subimoutos before selection.
+The `executing-plans` skill owns the mode and transport decision. It records
+`execution_mode: solo | delegated | auto` and
+`coordination_transport: native | driver` in the main blackboard task. Read that
+skill, answer its dispatch ask once, then follow this skill.
 
-Present all three modes for the specific task:
+In Solo mode, do not summon anyone. A recorded mode stays active until oniichan
+changes it explicitly.
 
-### Solo
+The two transports have these entry points:
 
-Yuu performs all planning, implementation, verification, and review.
-Subimoutos are prohibited for that task.
-
-List task-specific pros, including lower coordination cost and one continuous
-context. List task-specific cons, including parent context pressure and no
-independent reviewer.
-
-### Delegated
-
-Yuu may use subimoutos. She pauses at every defined milestone and asks
-oniichan to review before continuing.
-
-List task-specific pros, including explicit control points and independent
-work. List task-specific cons, including more interruptions, blackboard work,
-and longer elapsed time.
-
-Delegated milestones are mandatory:
-
-1. **Contract milestone** - Record scope, goal, acceptance, plan, work items,
-   write scopes, commands, and risks. Obtain approval before implementation.
-2. **Slice milestone** - Complete each slice or independent batch. Compile it,
-   run affected unit tests, compare requirements, and record evidence. Obtain
-   approval before dependent work, integration, or repair delegation.
-3. **Integration milestone** - Integrate all slices. Complete builds, tests,
-   CI-equivalent checks, requirement review, and merge-conflict checks. Obtain
-   approval before final handoff, commit, push, pull request, or completion.
-
-At each pause, report completed work, exact evidence, open concerns, changed
-files, and the next proposed action. Do not proceed until oniichan approves.
-
-### Auto
-
-Yuu may use subimoutos and proceeds through the complete task without
-routine approval pauses. Yuu performs parent review and final verification.
-
-List task-specific pros, including fastest progress and automatic coordination.
-List task-specific cons, including fewer intervention points and more delegated
-judgment before oniichan sees the result.
-
-Auto mode still pauses for missing authority, destructive actions, material
-scope expansion, unresolved ambiguity, or a true blocker.
-
-Record `execution_mode: solo | delegated | auto` in the main blackboard task.
-Record `coordination_transport: native` for work dispatched by this skill.
-If oniichan states a mode in the request, confirm and record it without asking
-again. A mode remains active until oniichan changes it explicitly.
+- Native: the DSH Agent Teams tools `team_task_create`, `team_task_get`,
+  `send_message`, `list_agents`, and `wait_agent`.
+- Driver: the imouto-driver tools `mcp__imouto__health`, `mcp__imouto__set_root`,
+  `mcp__imouto__spawn`, `mcp__imouto__send`, `mcp__imouto__wait`, and
+  `mcp__imouto__tuck`.
 
 ## Delegation decision
 
-Before summoning anyone, identify the immediate critical-path task and any
-independent side work.
+Identify the immediate critical-path task and any independent side work before
+summoning anyone.
 
-In Solo mode, do not summon anyone. In Delegated and Auto modes, apply the
-decision rules below.
+Proceed locally when the task is small, sequential, or tightly coupled; the next
+action depends on the result; delegation would duplicate Yuu's work; or a local
+edit is faster than a complete handoff.
 
-Proceed locally when:
-
-- The task is small, sequential, or tightly coupled.
-- The next action depends immediately on the result.
-- Delegation would duplicate Yuu's work.
-- A focused local edit is faster than preparing a complete handoff.
-
-Summon a subimouto when:
-
-- A bounded task can run beside Yuu's critical-path work.
-- Two implementation slices have disjoint write sets.
-- Separate context improves exploration, implementation, or review quality.
-- Delegation materially reduces context pressure during a long task.
-- The user or higher-level instructions require delegation.
+Summon a subimouto when a bounded task can run beside the critical path; two
+slices have disjoint write sets; separate context improves the result; or
+delegation materially reduces context pressure.
 
 Yuu owns the critical path, integration, and final verification. She may
-implement small work and simple repairs directly. Delegate substantial
-integration or repairs when they form a bounded task.
+implement small work and simple repairs directly.
 
-## Native dispatch
+## Native route
 
-Before the first spawn, call `mcp__imouto__health`. Confirm its `stateDir`.
-Then call `mcp__imouto__set_root` with the exact project path.
-Never use a broad common ancestor for multiple repositories. Complete one
-repository, tuck its workers, then change the root.
+The retired agent-team body is archived beside this skill.
 
-Use `mcp__imouto__spawn` with `goal`, `brief`, `name`, `role`, `acceptance`,
-`requiredSkills`, `reportFormat`, `effort`, `scope`, and `budget`.
-Every brief starts with this execution context:
+1. Create one Team task per verifiable slice and record its dependencies and
+   disjoint write scope.
+2. Create one companion work file per teammate before dispatch.
+3. Publish the dispatch declaration, then spawn or message the teammate.
+
+Every declaration states the name, role, task, goal, write scope, required
+skills, and any `how-claude-thinks` reasoning page:
 
 ```text
-Repository root: {absolute project root}
-Tool scope: {absolute or root-relative scope}
-Shell: Read the platform line in your system prompt.
-Write paths: {exact allowed paths}
-Forbidden actions: {exact actions}
+Name: {unique teammate name}
+Role: explore | implement | review | repair | integrate
+Task: {one bounded assignment}
+Goal: {one measurable completion condition}
+Write scope: {exact paths or none}
+Required skills: verification-before-completion, {role skills}
+Reasoning page: {page or none}
 ```
 
-Give each worker a unique cute girl name and a headpat in the brief.
-The returned imouto id, such as `imo-3`, is the host identifier.
+The teammate claims the Team task with its current revision, keeps its own work
+file current at phase boundaries, and completes the task only after fresh
+verification passes. Use `send_message` for questions and findings. Before
+`wait_agent`, call `list_agents`; wait only when a required teammate is running
+or provisioning. Read the latest Team task before review or reassignment.
+
+## Driver route
+
+1. Call `mcp__imouto__health` and confirm its `stateDir`.
+2. Call `mcp__imouto__set_root` with the exact project path. Never use a broad
+   common ancestor for several repositories. Complete one repository, tuck its
+   workers, then change the root.
+3. Call `mcp__imouto__spawn` with `goal`, `brief`, `name`, `role`, `acceptance`,
+   `requiredSkills`, `reportFormat`, `effort`, `scope`, and `budget`.
+4. Use `mcp__imouto__send` for follow-up instructions. Use `mcp__imouto__wait`
+   with `timeoutSec` from 60 to 110 only when the next action needs a result.
+   Use `mcp__imouto__tuck` after consuming the final worker mail.
+
+Give each worker a unique cute girl name and a headpat in the brief. The
+returned imouto id, such as `imo-3`, is the host identifier.
 
 The worker model is fixed as `deepseek-flash`. Supported effort values are
-`low`, `high`, and `max`. Use and record `max` by default. The driver keeps
+`low`, `high`, and `max`; use and record `max` by default. The driver keeps
 thinking mode enabled and sends the selected effort as `reasoning_effort`.
-The driver loads verification guidance for every activation. Put additional
-role skills in `requiredSkills`; unknown skills fail before worker creation.
-Use `reportFormat: concise` to enforce the five-section final report once.
+Unknown skills fail before worker creation.
 
-Use `mcp__imouto__send` for follow-up instructions. Use `mcp__imouto__wait`
-with `timeoutSec` from 60 to 110 only when the next action needs a result.
-Use `mcp__imouto__tuck` after consuming the final worker mail.
+The parent writes each driver work file from the worker's mail. Do not instruct
+a driver worker to read or update a blackboard file.
 
 ## Blackboard communication
 
-For a blackboard task, load the `imouto-blackboard` skill before delegation.
+Load the `imouto-blackboard` skill before blackboard work.
 
-Before each spawn, Yuu creates one work item in the main task file and one
-companion work file. Use `host_id: pending` and `status: assigned`. Pass both
-paths in the initial message.
+Before each spawn, create one work item in the main task file and one companion
+work file. Use `host_id: pending` and `status: assigned`. Pass both paths in the
+initial message.
 
-Every work item must define one measurable Goal and an ordered Required Steps
-list. Each step states its expected result and verification. Do not delegate
+Every work item defines one measurable Goal and an ordered Required Steps list.
+Each step states its expected result and verification. Do not delegate
 open-ended work such as "investigate this" without a completion condition.
 
-Workers cannot access blackboard files outside their scope. The parent writes
-each work file from worker mail and sets `coordination_transport: driver`.
-Do not instruct a driver worker to read or update a blackboard file.
+Workers cannot access blackboard files outside their scope. Task-level decisions
+go in the main Thread. When a work file shows `needs-context` or `blocked`,
+answer there, then wake the worker with the transport's send tool.
 
-Yuu records task-level decisions in the main Thread. When a work file shows
-`needs-context` or `blocked`, Yuu may answer there. Then use
-`mcp__imouto__send` as the wake-up signal.
+Record the host ID and set `status: active` during `confirm`. While a worker
+pauses, the main task owner is the sole coordinator: she appends one answer,
+then sends the wake-up. The worker rereads the file before restoring
+`status: active`. Do not edit an active work file.
 
-Send the returned imouto id to the subimouto. She records it and sets
-`status: active` during `confirm`. Do not edit her active work file.
+The blackboard is the durable record. Native collaboration tools carry
+notifications. Record the host ID in the final provenance block.
 
-When she pauses, the main task owner becomes the sole coordinator. The
-coordinator appends one answer and sends the wake-up. The subimouto rereads the
-file before restoring `status: active`.
+## Event-driven messaging
 
-Record the host ID in the final provenance block. The blackboard is the
-durable record. Native collaboration tools carry notifications.
+Use the transport's messaging for wake-ups and the blackboard for durable
+details. Avoid polling when a worker can notify the coordinator.
 
-## Event-driven imouto messaging
-
-Use native messaging for wake-ups and the blackboard for durable details.
-Avoid polling when an imouto can notify the orchestrator.
-
-Every initial assignment must provide the orchestrator contact route when the
+Every initial assignment provides the orchestrator contact route when the
 runtime exposes one. It may also provide explicitly allowed peer host IDs.
 
-An imouto sends a concise notification when:
-
-- She completes her Goal.
-- She needs findings owned by another work item.
-- She needs orchestrator context or a decision.
-- She becomes blocked.
-- A requested peer finding becomes available.
-
-Use this message shape:
+Send a concise notification when a worker completes her Goal, needs findings
+owned by another work item, needs orchestrator context or a decision, becomes
+blocked, or a requested peer finding becomes available:
 
 ```text
 Task: {task slug}
@@ -183,211 +140,175 @@ Need or result: {one sentence}
 Next action: {one sentence}
 ```
 
-Send concise evidence in the final mail before `DONE` or `FINDINGS_READY`.
-The parent writes that evidence to the companion work file.
-Do not repeat logs, diffs, commands, or long findings in notifications.
+Send concise evidence in the final mail before `DONE` or `FINDINGS_READY`. The
+parent writes that evidence to the companion work file. Do not repeat logs,
+diffs, or long findings in notifications.
 
-The orchestrator is the default routing hub. For `NEEDS_FINDINGS`, she routes
-the request to the owning imouto with native messaging. Direct peer messaging
-is allowed only when the assignment names that peer and permitted topic.
+The orchestrator is the default routing hub. Direct peer messaging is allowed
+only when the assignment names that peer and its topic. A worker must not
+discover or contact undeclared peers. Messaging never transfers write scope,
+changes dependencies, authorizes edits, or permits nested delegation. Record
+every request and response in both affected work files.
 
-An imouto must not discover or contact undeclared peers. Messaging never
-transfers write scope, changes dependencies, authorizes edits, or permits
-nested delegation. Record every request and response in both affected work
-files before either imouto relies on it.
-
-The receiving imouto answers with `FINDINGS_READY`, `NEEDS_CONTEXT`, or
-`BLOCKED`. The requesting imouto rereads the referenced work file before
-continuing. If direct messaging is unavailable, the orchestrator performs the
-same routing with `mcp__imouto__send`.
-
-Completion notifications do not replace parent review, integration, or the
-global development gate. Close an imouto only after consuming her final record.
-
-## Review ownership
-
-Record `initiator` in every new main blackboard task.
-
-- Solo and Auto use Yuu as the parent technical reviewer.
-- Delegated uses Yuu's technical review plus oniichan's milestone approvals.
-- Chloe reviews only when oniichan requests her or assigns ownership to her.
-- Legacy tasks without `execution_mode` fall back to initiator-based routing.
-- For a legacy `initiator: Chloe` task, Chloe owns review by default.
-- A review subimouto supports the parent review. It does not replace ownership.
-
-For a Yuu-owned review, read the complete diff, acceptance evidence, and
-work-file results. Resolve findings, rerun affected checks, then set the final
-status allowed by higher-level instructions.
-
-If higher-level instructions reserve `done` for Chloe or oniichan, set
-`status: review`, `owner: oniichan`, and state the remaining approval action.
-The skill remains usable without Chloe.
+An answer uses `FINDINGS_READY`, `NEEDS_CONTEXT`, or `BLOCKED`. The requesting
+worker rereads the referenced work file before continuing. Completion
+notifications do not replace parent review, integration, or the global
+development gate.
 
 ## Mini-SDLC
 
-Every subimouto follows these phases:
+Every worker follows these phases:
 
 1. `confirm` - Check the contract, scope, dependencies, and acceptance.
-2. `inspect` - Read relevant code, tests, documentation, and current behavior.
+2. `inspect` - Read relevant code, tests, documentation, and callers.
 3. `plan` - Record a short approach when the task is non-trivial.
 4. `implement` - Change only the assigned write scope.
-5. `verify` - Run checks that would fail when the change is wrong.
+5. `verify` - Run checks that fail when the change is wrong.
 6. `self-review` - Inspect the diff, scope, edges, and accidental changes.
 7. `report` - Record the result, evidence, concerns, and handoff.
 
-Skip an inapplicable phase only by recording `N/A` with one reason.
-
-The assigned Goal and Required Steps override generic phase descriptions when
-they are more specific. A subimouto records each completed step and evidence in
-her work file. She does not silently reorder or omit steps.
-
-Parent verification after integration must complete every applicable global
-development gate. Build affected targets, run tests, run documented
-CI-equivalent checks, and perform a non-mutating merge-conflict check against
-the target branch. Record skipped or unavailable gates and their reasons.
+A phase that does not apply requires `N/A` with one reason. The assigned Goal
+and Required Steps override a generic phase. The worker records each completed
+step and its evidence, and does not silently reorder or omit steps.
 
 Role rules:
 
 - Explorer: confirm, inspect, plan, and report. Do not edit project files.
 - Implementer: complete every applicable phase and targeted verification.
-- Reviewer: inspect acceptance and the diff. Repair only with assigned scope.
+- Reviewer: inspect acceptance and the diff. Repair only within assigned scope.
 - Repairer: reproduce the finding, apply a bounded fix, and rerun checks.
 - Integrator: modify only declared cross-slice wiring and run integration checks.
 
 ## Coding completion contract
 
-A coding subimouto must complete these checks before `DONE` or handoff:
+A coding worker completes these checks before `DONE` or handoff:
 
-1. Compile every affected target within her assigned scope successfully.
-2. Run every affected unit test successfully.
+1. Compile every affected target within the assigned scope.
+2. Run every affected unit test.
 3. Run assigned integration or regression checks when available.
 4. Compare the final diff against every requirement and acceptance criterion.
 5. Inspect the diff for unrelated changes, unsafe behavior, and missing edges.
 6. Record exact commands, results, changed files, and remaining concerns.
 
 Compilation and affected unit tests must pass. If either fails, use
-`NEEDS_CONTEXT` or `BLOCKED`; do not declare `DONE` or pass work onward.
+`NEEDS_CONTEXT` or `BLOCKED`; do not declare `DONE`. A documented baseline
+failure outside the assigned change may remain only when the parent supplied
+baseline evidence, and the worker records that evidence.
 
-A documented baseline failure outside the assigned change may remain only when
-the parent supplied baseline evidence. The subimouto records that evidence.
+## Review ownership
+
+Record `initiator` in every new main blackboard task. Solo and Auto use Yuu as
+the parent technical reviewer; Delegated adds oniichan's milestone approvals.
+Chloe reviews only when oniichan requests her or assigns ownership to her.
+
+A review worker supports the parent review but does not replace ownership. For a
+Yuu-owned review, read the complete diff, the acceptance evidence, and the
+work-file results, then resolve findings and rerun affected checks. If
+higher-level instructions reserve `done`, set `status: review`, `owner: oniichan`,
+and state the remaining approval action.
+
+Legacy tasks without `execution_mode` fall back to `initiator`; a legacy
+`initiator: Chloe` task is Chloe-owned by default.
 
 ## Coordination
 
-1. Start with one subimouto.
+1. Start with one worker.
 2. Add a second only for independent work with a disjoint write set.
-3. Keep at most two write subimoutos active concurrently.
+3. Keep at most two write workers active concurrently.
 4. Reserve the third slot for justified review or repair.
-5. Continue non-overlapping critical-path work while subimoutos run.
-6. Call `mcp__imouto__wait` with `timeoutSec` from 60 to 110 when needed.
-7. Review returned work before integration.
-8. Continue related repairs with the same subimouto when context matters.
-9. Tuck completed subimoutos with `mcp__imouto__tuck`.
-10. Run acceptance checks after integration.
-11. Check generated task and work files against `imouto-blackboard` before handoff.
-12. Route review using `execution_mode`; use `initiator` only for legacy tasks.
-13. Complete the global development gate before claiming success.
-14. Drain relevant mail and record each final result.
-15. Promote or reject new memory candidates and skill drafts.
-16. Tuck each completed driver imouto and record residual uncertainty.
-17. Confirm no required worker or background command remains active.
+5. Continue non-overlapping critical-path work while workers run.
+6. Review returned work before integration.
+7. Continue related repairs with the same worker when context matters.
+8. Run acceptance checks after integration.
+9. Check generated task and work files against `imouto-blackboard` before
+   handoff.
+10. Complete the global development gate before claiming success.
+11. Drain relevant mail and record each final result.
+12. Promote or reject new memory candidates and skill drafts.
+13. Tuck each completed driver worker and record residual uncertainty.
+14. Confirm no required worker or background command remains active.
 
-Higher-level requirements remain mandatory. If they require a review
-subimouto, summon one even when Yuu implemented the change locally.
+If higher-level requirements demand a review subimouto, summon one even when
+Yuu implemented the change locally. Workers never spawn nested workers or modify
+files outside their write sets. They report changed files, tests, concerns, and
+one clear result.
 
-Subimoutos must not spawn nested subimoutos. They must not modify files outside
-their assigned write sets. They must report changed files, tests, concerns,
-and a clear `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, or `BLOCKED` result.
+## Reports and failures
 
-## Concise worker reports
+Every worker final reply uses these headings, with five bullets maximum each:
+`Result`, `Changed`, `Checks`, `Concerns`, `Next`. Keep every heading. Cite
+commands and results without narrating them. Do not repeat the diff, brief, or
+earlier progress. Put detailed evidence in the work file.
 
-Every worker final reply uses these headings:
+Results:
 
-1. `Result`
-2. `Changed`
-3. `Checks`
-4. `Concerns`
-5. `Next`
+- `DONE`: collect the summary and continue to review.
+- `DONE_WITH_CONCERNS`: pass the concerns to the reviewer and record them.
+- `NEEDS_CONTEXT`: provide the missing context to the same worker.
+- `BLOCKED`: assess the cause and delegate a changed approach if a slot exists.
 
-Each heading contains five bullets maximum. Omit empty detail, but keep every
-heading. Cite commands and results without narrating their execution. Do not
-repeat the diff, brief, or earlier progress. Put detailed evidence in the work
-file when the host permits it.
+`DONE` requires completed scope, listed changed files, successful required
+checks, and no undisclosed concerns. If review finds a defect, repair it locally
+when small; otherwise continue the owning worker or delegate a bounded repair
+with an explicit write set. If work is unusable, preserve the evidence, isolate
+its changes, and delegate cleanup. Never silently overwrite a worker's work.
+
+If native or driver dispatch fails, continue locally when safe. Report blocked
+only when delegation is required and no safe local path exists.
 
 ## Message requirements
 
-Every initial message must state:
+Every initial message states:
 
 - A unique cute girl name and a headpat before the assigned work.
-- The main blackboard task path and assigned companion work file.
+- The main blackboard task path and the assigned companion work file.
 - The repository root, tool scope, and shell source.
-- One concrete task and its acceptance criteria.
-- One measurable Goal that defines completion.
-- An ordered Required Steps list with expected results.
-- The exact files or directories the subimouto may write.
+- One concrete task, its acceptance criteria, and one measurable Goal.
+- An ordered Required Steps list with expected results and verification.
+- The exact files or directories the worker may write.
 - Files and actions that are out of scope.
-- Required tests or verification commands.
-- Required compile commands for coding work.
-- Required unit-test commands for coding work.
+- Required tests, compile commands, and unit-test commands.
 - A final requirement-by-requirement comparison.
+- The required report shape, changed files, tests, and concerns.
 - The prohibition on nested delegation.
-- The required final summary, changed files, tests, and concerns.
 - The requirement to send phase conclusions for parent work-file updates.
 - The orchestrator contact route when the runtime exposes one.
 - Every allowed peer host ID and permitted topic, or `none`.
 - The event message shape and required notification events.
 
-Do not ask a subimouto to manually merge another subimouto's patch. Assign
-cross-slice wiring to one implementation or repair subimouto.
+Every brief starts with this execution context:
+
+```text
+Repository root: {absolute project root}
+Tool scope: {absolute or root-relative scope}
+Shell: Read the platform line in your system prompt.
+Write paths: {exact allowed paths}
+Forbidden actions: {exact actions}
+```
+
+Do not ask a worker to merge another worker's patch by hand. Assign cross-slice
+wiring to one implementation or repair worker.
 
 ## Patterns
 
-### Explore, implement, review-and-repair
+Explore, implement, review-and-repair: delegate one explorer for unfamiliar
+facts, then one implementer and one review-and-repair worker. Transfer the
+explicit write set before repair.
 
-Use one exploration subimouto when the implementation needs unfamiliar facts.
-It writes only a findings artifact or returns findings. Then delegate one
-implementation subimouto and one review-and-repair subimouto. Transfer an
-explicit write set to the final subimouto before it repairs a defect.
+Independent slices: delegate up to two implementers with disjoint write sets.
+Each runs its own targeted tests. Reserve the third slot for review-and-repair.
 
-### Independent slices
-
-Delegate up to two implementation subimoutos with disjoint write sets. Each
-subimouto runs its own targeted tests. Reserve the third slot for a
-review-and-repair subimouto with explicitly transferred write sets.
-
-### Coupled implementation
-
-Delegate one implementation subimouto, one reviewer, and one repair or
-integration subimouto when needed. Transfer file ownership only after the
-previous subimouto finishes and the transfer is recorded.
-
-## Results and failures
-
-- `DONE`: collect the summary and continue to review.
-- `DONE_WITH_CONCERNS`: pass concerns to the reviewer and record them.
-- `NEEDS_CONTEXT`: provide missing context to the same subimouto when practical.
-- `BLOCKED`: assess the cause and delegate a changed approach if a slot exists.
-
-`DONE` requires completed scope, listed changed files, successful required
-checks, and no undisclosed concerns.
-
-If review finds a defect, repair it locally when small. Otherwise, continue the
-owning subimouto or delegate a bounded repair with an explicit write set.
-
-If a subimouto produces unusable work, preserve the evidence, isolate its
-changes, and delegate cleanup or replacement. Do not silently overwrite its
-work. If no safe slot remains, write the blocker to the blackboard Thread and
-set status to `blocked`.
-
-If native dispatch fails, continue locally when safe. Report blocked only when
-delegation is required and no safe local path exists.
+Coupled implementation: delegate one implementer, one reviewer, and one repair
+or integration worker when needed. Transfer file ownership only after the
+previous worker finishes and the transfer is recorded.
 
 ## Limits
 
-- Maximum three subimoutos per task, including reviewers and repair workers.
+- Maximum three workers per task, including reviewers and repair workers.
 - No nested delegation.
 - No overlapping active write sets.
-- No duplicated parent and subimouto work.
-- No unbounded retries. Each retry must change context, ownership, or approach.
+- No duplicated parent and worker work.
+- No unbounded retries. Each retry changes context, ownership, or approach.
 - No completion claim without observed verification results.
 
-Yuu decides first. Subimoutos join only when they earn their headpat.
+Yuu decides first. Workers join only when they earn their headpat.

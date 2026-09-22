@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: Write the failing test first, watch it fail, then write the smallest code that passes. Read before implementing any feature, bugfix, or behavior change.
+description: Write the failing test first, watch it fail, then write the smallest code that passes. Read before implementing any feature, bugfix, or behavior change, and after writing a regression test.
 ---
 
 # Test-Driven Development
@@ -42,12 +42,22 @@ you cannot name one, the test measures nothing.
 
 ## Verify a regression test actually catches the bug
 
-A regression test is only proven when it fails on the old behavior:
+Use this procedure after you write a regression test, to prove the test fails
+on the old behavior. A regression test is only proven when it fails on the old
+behavior:
 
-1. Write the fix and the test. The test passes.
-2. Undo the fix only. Keep the test.
-3. Run the test. It must fail, with your assertion message.
-4. Restore the fix. The test passes again.
+1. Write the fix and the regression test. Run the test: it must pass.
+2. Temporarily undo the fix only. Keep the test. For a one-line guard, replace
+   the guarded line with the old unconditional line.
+3. Run the one test by name:
+   `cargo test -p <crate> --lib <test_name>`
+   Expect FAILED with the assertion message you wrote.
+4. If the test still passes, the test does not cover the bug. Rewrite the test.
+5. Restore the fix exactly, then run the named test again: it must pass.
+6. Run the full gate from the brief (for Rust, test and clippy), and confirm
+   the pass counts.
+7. Report both results: the failure on the old behavior and the pass on the
+   fix.
 
 A test that passes in both states does not cover the bug.
 

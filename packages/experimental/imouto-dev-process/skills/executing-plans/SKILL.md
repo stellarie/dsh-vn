@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Run a locked blackboard plan to completion. Read after imouto-plan locks a task at ready, or when oniichan says to execute a plan.
+description: Run a locked blackboard plan to completion. Read after imouto-plan locks a task at ready, when oniichan says to execute a plan, or when the transport and the mode must be chosen.
 ---
 
 # Executing Plans
@@ -30,15 +30,16 @@ answer for each, with a reason tied to this task.
 **Transport.** The frontmatter field `coordination_transport` accepts `native`,
 `discord`, or `driver`.
 
-- `imouto-agent-team` - native DSH teammates and the shared task board. Record
+- Native - DSH teammates on the shared task board. Record
   `coordination_transport: native`.
-- `imouto-driver` - MCP workers through the spawn, send, and tuck tools. Record
+- Driver - MCP workers through the spawn, send, and tuck tools. Record
   `coordination_transport: driver`. The parent writes each work file from the
   worker's mail. The worker never writes the blackboard.
 - `discord` - the Arisucord control plane. Record it only when that runner is
   the selected route.
-- `subimouto-dev` - a delegation procedure, not a transport. It runs on the
-  native or the driver route, so record the route it uses.
+
+`subimouto-dev` is a delegation procedure, not a transport. It runs on the
+native or the driver route. Load it for the delegation pattern.
 
 **Mode.** Record `execution_mode` as one of these.
 

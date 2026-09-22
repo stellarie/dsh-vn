@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest'
 const presetRoot = path.resolve(import.meta.dirname, '../presets/yuu')
 const skillsRoot = path.join(presetRoot, 'skills')
 
-const packagedSkills = ['deepseek-only-dev', 'imouto-agent-team', 'subimouto-dev']
+const packagedSkills = ['deepseek-only-dev', 'subimouto-dev']
 const skillName = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const hostInvocation = /~\/\.claude|~\/\.codex|~\/\.imouto|~\/notes|imouto-dispatch|mcp__claude|codex exec|claude -p/
 const absoluteHostPath = /(?:^|[\s("'`\[])[A-Za-z]:[\\/]|\\\\[A-Za-z]|\/Users\/|\/home\/|\/root\//m
@@ -31,7 +31,8 @@ describe('Yuu preset manifest', () => {
   })
 
   it('ships exactly the packaged preset skills', () => {
-    expect(fs.readdirSync(skillsRoot).sort()).toEqual(packagedSkills)
+    const shipped = fs.readdirSync(skillsRoot).filter(entry => !entry.endsWith('.retired.md')).sort()
+    expect(shipped).toEqual(packagedSkills)
   })
 
   for (const name of packagedSkills) {

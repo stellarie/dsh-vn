@@ -10,9 +10,9 @@ const roots = [processSkills, presetSkills]
 // The profile preset composes this package, so one catalog covers both roots.
 const expectedSkills = [
   'brainstorming', 'code-review', 'codebase-analysis', 'deepseek-only-dev', 'executing-plans', 'how-claude-thinks',
-  'imouto-agent-team', 'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'kotlin-guidelines',
-  'prove-a-regression-test-catches-its-bug', 'rust-guidelines', 'skill-synthesis', 'subimouto-dev',
-  'systematic-debugging', 'test-driven-development', 'verification-before-completion', 'writing-ste100',
+  'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'kotlin-guidelines', 'rust-guidelines',
+  'skill-synthesis', 'subimouto-dev', 'systematic-debugging', 'test-driven-development',
+  'verification-before-completion', 'writing-ste100',
 ]
 
 // Workflow skills that must not enter the portable package.
@@ -20,7 +20,7 @@ const excludedSkills = ['imouto-dispatch', 'ste-writing', 'notes-wiki', 'tool-cr
 
 // Skill names the Yuu workflow skills maintain themselves.
 const workflowSkills = [
-  'deepseek-only-dev', 'imouto-agent-team', 'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'subimouto-dev',
+  'deepseek-only-dev', 'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'subimouto-dev',
 ]
 
 const hostInvocation = /~\/\.claude|~\/\.codex|~\/\.imouto|~\/notes|imouto-dispatch|mcp__claude|codex exec|claude -p/
