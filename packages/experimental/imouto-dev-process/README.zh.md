@@ -9,7 +9,7 @@ kind: "package-bundle"
 
 ## 概述
 
-此 bundle 为 Yuu 提供黑板验证、合法任务转换和十四个共享开发技能。
+此 bundle 为 Yuu 提供黑板验证、合法任务转换和十六个共享开发技能。
 
 ## 目录
 
@@ -45,7 +45,7 @@ kind: "package-bundle"
 
 #### 模型看到的内容
 
-Yuu 看到 `blackboard_validate`、`blackboard_transition` 和十四个可发现技能说明。
+Yuu 看到 `blackboard_validate`、`blackboard_transition` 和十六个可发现技能说明。
 
 #### Token 影响
 

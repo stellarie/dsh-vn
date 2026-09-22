@@ -9,10 +9,10 @@ const roots = [processSkills, presetSkills]
 
 // The profile preset composes this package, so one catalog covers both roots.
 const expectedSkills = [
-  'code-review', 'codebase-analysis', 'deepseek-only-dev', 'how-claude-thinks', 'imouto-agent-team',
-  'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'kotlin-guidelines',
-  'prove-a-regression-test-catches-its-bug', 'rust-guidelines', 'subimouto-dev', 'systematic-debugging',
-  'test-driven-development', 'verification-before-completion', 'writing-ste100',
+  'brainstorming', 'code-review', 'codebase-analysis', 'deepseek-only-dev', 'executing-plans', 'how-claude-thinks',
+  'imouto-agent-team', 'imouto-blackboard', 'imouto-plan', 'imouto-standards', 'kotlin-guidelines',
+  'prove-a-regression-test-catches-its-bug', 'rust-guidelines', 'skill-synthesis', 'subimouto-dev',
+  'systematic-debugging', 'test-driven-development', 'verification-before-completion', 'writing-ste100',
 ]
 
 // Workflow skills that must not enter the portable package.
@@ -36,12 +36,14 @@ const nonSkillTokens = new Map<string, string>([
   ['deepseek-flash', 'worker model id'],
   ['gpt-6-astra', 'model id'],
   ['imo-3', 'host id example'],
+  ['imouto-driver', 'MCP worker transport name, not a skill'],
   ['needs-context', 'work-item status value'],
   ['receiving-code-review', 'upstream skill name in a provenance note'],
   ['reduce-human-error', 'chapter name in rust-guidelines/Safety-Critical-Overview.md'],
   ['requesting-code-review', 'upstream skill name in a provenance note'],
   ['self-review', 'mini-SDLC phase value'],
   ['undefined-behavior', 'chapter name in rust-guidelines/Safety-Critical-Overview.md'],
+  ['writing-plans', 'upstream skill name in a provenance note'],
 ])
 
 interface PackagedSkill {
