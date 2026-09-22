@@ -9,7 +9,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-This bundle provides blackboard validation, legal task transitions, and fourteen shared development skills for Yuu.
+This bundle provides blackboard validation, legal task transitions, and sixteen shared development skills for Yuu.
 
 ## Table of Contents
 
@@ -45,7 +45,7 @@ The package validates blackboard files before transitions. Its skill directory c
 
 #### What the model sees
 
-Yuu sees `blackboard_validate`, `blackboard_transition`, and fourteen discoverable skill descriptions.
+Yuu sees `blackboard_validate`, `blackboard_transition`, and sixteen discoverable skill descriptions.
 
 #### Token effect
 

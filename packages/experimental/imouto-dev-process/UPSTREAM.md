@@ -28,6 +28,16 @@ Imported verbatim from the imouto-driver global skill store at `.imouto/skills`,
 
 The repository owner authorized this import into `stellarie/dsh-vn`.
 
+## Superpowers
+
+Adapted from the Superpowers plugin, version 6.3.0, read from the Claude plugin cache under `.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0`.
+
+- `brainstorming` supplies `brainstorming`.
+- `writing-plans` supplies the plan quality bar in `executing-plans`.
+- The pipeline order in `executing-plans` follows the source's chain.
+
+The plugin is MIT licensed, copyright 2025 Jesse Vincent. Both skills are rewritten for the blackboard workflow and are not copies.
+
 ## Local repairs
 
 - `imouto-plan` is derived, not copied. The dispatch command, private notes path, and fixed reviewer names are rewritten for the packaged catalog.
