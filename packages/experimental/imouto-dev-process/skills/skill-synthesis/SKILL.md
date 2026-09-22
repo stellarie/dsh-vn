@@ -70,7 +70,8 @@ did not write the skill.
    destroys a package skill in the other.
 2. **Archive rule.** Retire a body to `<root>/{name}.retired.md`. The archive is
    a file, not a directory, because a scanned root reads `SKILL.md` from every
-   directory it holds. A directory there breaks the catalog test. Rollback is a
+   directory it holds. A directory there breaks the catalog test. Teach every
+   catalog reader to skip the archive file in the same change. Rollback is a
    file restore and a commit revert.
 3. **Absorption contract.** Every normative sentence of a retired skill appears
    in the merged body, or in the retirement record with a reason. The retirement

@@ -17,7 +17,7 @@ Imported verbatim from the imouto-driver global skill store at `.imouto/skills`,
 - `codebase-analysis`
 - `how-claude-thinks` with its 14 pages
 - `kotlin-guidelines` with its 7 pages
-- `prove-a-regression-test-catches-its-bug`
+- `prove-a-regression-test-catches-its-bug`, absorbed into `test-driven-development` on 2026-09-22
 - `rust-guidelines` with its 10 pages
 - `systematic-debugging`
 - `test-driven-development`
