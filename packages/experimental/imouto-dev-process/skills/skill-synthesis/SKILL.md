@@ -68,11 +68,13 @@ did not write the skill.
 1. **Rank rule.** Check the measured rank of every root that holds a merged or
    retired name. A merge that assumes the wrong rank fails in one direction and
    destroys a package skill in the other.
-2. **Archive rule.** Retire a body to `<root>/{name}.retired.md`. The archive is
-   a file, not a directory, because a scanned root reads `SKILL.md` from every
-   directory it holds. A directory there breaks the catalog test. Teach every
-   catalog reader to skip the archive file in the same change. Rollback is a
-   file restore and a commit revert.
+2. **Archive rule.** Retire a body to `<root>/{name}.retired`, with no `.md`
+   suffix. Discovery reads every top-level `.md` file as a single-file skill, so
+   an archive that ends `.md` loads as a live duplicate under its own recorded
+   name. A directory fails too, because a scanned root reads `SKILL.md` from
+   every directory it holds. Teach every catalog reader to skip the archive, and
+   confirm the archive is absent from the catalog after the retirement. Rollback
+   is a file restore and a commit revert.
 3. **Absorption contract.** Every normative sentence of a retired skill appears
    in the merged body, or in the retirement record with a reason. The retirement
    record is one Thread entry in the owning blackboard task. It lists each
