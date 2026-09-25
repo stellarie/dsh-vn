@@ -14959,7 +14959,7 @@
         "event:team/message/delivered.data"
       ],
       "sources": [
-        "packages/experimental/agent-team/src/types.ts:227"
+        "packages/experimental/agent-team/src/types.ts:236"
       ]
     },
     {
@@ -15322,7 +15322,7 @@
         "event:team/message/queued.data"
       ],
       "sources": [
-        "packages/experimental/agent-team/src/types.ts:225"
+        "packages/experimental/agent-team/src/types.ts:234"
       ]
     },
     {
@@ -46905,7 +46905,7 @@
         "event:team/task.data"
       ],
       "sources": [
-        "packages/experimental/agent-team/src/types.ts:223"
+        "packages/experimental/agent-team/src/types.ts:232"
       ]
     },
     {
@@ -49670,7 +49670,7 @@
         "event:team/member.data"
       ],
       "sources": [
-        "packages/experimental/agent-team/src/types.ts:221"
+        "packages/experimental/agent-team/src/types.ts:230"
       ]
     },
     {

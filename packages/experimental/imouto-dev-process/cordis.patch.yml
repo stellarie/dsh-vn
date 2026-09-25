@@ -1,0 +1,10 @@
+- insert:
+    - id: imouto-blackboard
+      name: '@deepseek-ai/dsh-experimental-imouto-dev-process'
+    - id: imouto-skill-filesystem
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      config:
+        providerName: imouto
+        includeDefaultRoots: false
+        customSkillDirs:
+          - !!js "process.getBuiltinModule('node:url').fileURLToPath(new URL('skills/', process.getBuiltinModule('node:url').pathToFileURL(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@deepseek-ai/dsh-experimental-imouto-dev-process/package.json'))))"

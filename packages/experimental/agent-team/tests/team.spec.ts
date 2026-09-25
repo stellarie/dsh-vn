@@ -902,6 +902,32 @@ describe('Team Remote API', () => {
     expect(ctx.agentTeams.remoteView(lead).tasks).toHaveLength(1)
   })
 
+  it('steers one named teammate with one text line from the browser caller', async () => {
+    const { ctx, lead } = await setup(['hang'])
+    const started = await spawn(ctx, lead, 'worker')
+    const worker = await waitRunning(ctx, started.member.id)
+
+    const sent = await ctx.agentTeams.remoteSendMessage(lead, {
+      target: 'worker',
+      text: 'polish the sidebar pane',
+    }, SIGNAL)
+    expect(sent.status).toBe('accepted')
+    const receipt = worker.inbox.nextStep.find(item => item.source.kind === 'team-message'
+      && item.source.messageId === sent.messageId)
+    expect(receipt?.content).toEqual(content(`Team message ${sent.messageId} from lead:`)
+      .concat(content('polish the sidebar pane')))
+    expect(durable(lead).pendingMessages).toEqual([])
+
+    worker.cancel({ kind: 'parent' })
+    await worker.whenIdle()
+  })
+
+  it('propagates a steering rejection for an unknown teammate name', async () => {
+    const { ctx, lead } = await setup([])
+    await expect(ctx.agentTeams.remoteSendMessage(lead, { target: 'ghost', text: 'hello' }, SIGNAL))
+      .rejects.toMatchObject({ code: 'TEAM_MEMBER_NOT_FOUND' })
+  })
+
   it('preserves Team task rejections and propagates unexpected failures', async () => {
     const { ctx, lead } = await setup([])
     const createRequest = {

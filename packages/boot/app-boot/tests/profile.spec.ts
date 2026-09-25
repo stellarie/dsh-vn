@@ -321,6 +321,17 @@ describe('loadProfile', () => {
     expect(PROFILE_TEMPLATES['sdk-minimal']).toEqual({
       bundles: ['@deepseek-ai/dsh-sdk-minimal'],
     })
+    expect(PROFILE_TEMPLATES['imouto-yuu']).toEqual({
+      bundles: [
+        '@deepseek-ai/dsh-base',
+        '@deepseek-ai/dsh-web-app',
+        '@deepseek-ai/dsh-experimental-imouto-dev-process',
+        '@deepseek-ai/dsh-experimental-imouto-dev-profile',
+        '@deepseek-ai/dsh-experimental-agent-team-profile',
+        '@deepseek-ai/dsh-experimental-agent-team-web-profile',
+        '@stellarie/dsh-imouto-codex',
+      ],
+    })
     try {
       loadProfile('t', 'web', anchor, home)
     } catch {
