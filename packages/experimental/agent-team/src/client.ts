@@ -2,7 +2,10 @@
 
 export type {
   CreateTeamTaskRequest,
+  SendTeamMessageResult,
+  SendTeamMessageTextRequest,
   TeamMemberView,
+  TeamMessageId,
   TeamTaskAction,
   TeamTaskId,
   TeamTaskMutationResult,

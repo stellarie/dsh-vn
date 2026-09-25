@@ -1,0 +1,94 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.host.tsbuildinfo"
+  },
+  "files": [
+    "src/adapter.ts",
+    "src/auth-paths.ts",
+    "src/auth-routes.ts",
+    "src/auth.ts",
+    "src/bin.ts",
+    "src/binary-fs.ts",
+    "src/compatibility.ts",
+    "src/credential-document.ts",
+    "src/doctor.ts",
+    "src/fast-mode-paths.ts",
+    "src/fast-mode.ts",
+    "src/image-capability.ts",
+    "src/imagegen.ts",
+    "src/index.ts",
+    "src/model-catalog.ts",
+    "src/model-fallback.ts",
+    "src/oauth-provider.ts",
+    "src/proxy.ts",
+    "src/public-http.ts",
+    "src/read-image-enhancement.ts",
+    "src/responses.ts",
+    "src/search-event.ts",
+    "src/search.ts",
+    "src/service.ts",
+    "src/session-repair.ts",
+    "src/store.ts",
+    "src/tool-policy.ts",
+    "src/trusted-origins.ts",
+    "src/tui.ts",
+    "src/usage.ts",
+    "src/version.ts"
+  ],
+  "references": [
+    {
+      "path": "../cordis"
+    },
+    {
+      "path": "../schemastery"
+    },
+    {
+      "path": "../../packages/attachment/attachment"
+    },
+    {
+      "path": "../../packages/core/agent"
+    },
+    {
+      "path": "../../packages/core/session"
+    },
+    {
+      "path": "../../packages/core/tools"
+    },
+    {
+      "path": "../../packages/fs/fs"
+    },
+    {
+      "path": "../../packages/host/webserver"
+    },
+    {
+      "path": "../../packages/interaction/commands"
+    },
+    {
+      "path": "../../packages/session/session-format-catalog"
+    },
+    {
+      "path": "../../packages/settings/settings"
+    },
+    {
+      "path": "../../packages/util/atomic-write"
+    },
+    {
+      "path": "../../packages/util/home-paths"
+    },
+    {
+      "path": "../../packages/util/http-proxy"
+    },
+    {
+      "path": "../../packages/web/web"
+    },
+    {
+      "path": "../../packages/llm/llm"
+    },
+    {
+      "path": "../../packages/llm/llm-pi-ai"
+    }
+  ]
+}

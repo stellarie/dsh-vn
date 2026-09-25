@@ -437,7 +437,7 @@ export function tierExternalDeps(
 /** A vendored package row parsed out of the `vendor/README.md` manifest table. */
 export interface VendoredRow {
   npmName: string
-  /** The name this package carries upstream; MIT attribution names the fork's origin, not our scope. */
+  /** The name this package carries upstream. */
   upstreamName: string
   upstream: string
 }
@@ -466,7 +466,7 @@ export function parseVendoredRows(text: string): VendoredRow[] {
  * disclosed, so a row that stops matching the table format is a hard error
  * rather than a package that quietly vanishes from the notices.
  */
-function collectVendored(): (VendoredRow & { sourceDirectory: string })[] {
+function collectVendored(): (VendoredRow & { sourceDirectory: string; license: string })[] {
   const rows = parseVendoredRows(readFileSync(resolve(root, 'vendor/README.md'), 'utf8'))
   const onDisk = new Map<string, string>()
   for (const entry of readdirSync(resolve(root, 'vendor'), { withFileTypes: true })) {
@@ -484,10 +484,10 @@ function collectVendored(): (VendoredRow & { sourceDirectory: string })[] {
     const dir = onDisk.get(row.npmName)
     if (dir === undefined) throw new Error(`gen-third-party-notices: vendored package ${row.npmName} from vendor/README.md has no vendor/ directory.`)
     const license = readManifest(`vendor/${dir}/package.json`).license
-    if (license !== 'MIT') {
-      throw new Error(`gen-third-party-notices: vendored ${row.npmName} declares license ${JSON.stringify(license)}; the vendored section assumes MIT throughout.`)
+    if (license !== 'MIT' && license !== 'Apache-2.0') {
+      throw new Error(`gen-third-party-notices: vendored ${row.npmName} declares unsupported license ${JSON.stringify(license)}.`)
     }
-    return { ...row, sourceDirectory: `vendor/${dir}` }
+    return { ...row, sourceDirectory: `vendor/${dir}`, license }
   })
 }
 
@@ -778,11 +778,11 @@ The complete npm transitive closure, including the Landlock launcher workspace, 
 
 ## Vendored source (\`vendor/\`)
 
-The Cordis framework and its foundation libraries are source-vendored into this repository rather than consumed from npm, and republished under the \`@deepseek-ai\` scope. All are MIT-licensed; each directory preserves its upstream \`LICENSE\` file. Exact upstream commits and local modifications are recorded in [\`vendor/README.md\`](vendor/README.md).
+The Cordis framework, its foundation libraries, and the optional Codex integration are source-vendored into this repository. Each directory preserves its upstream \`LICENSE\` file. Exact upstream commits and local modifications are recorded in [\`vendor/README.md\`](vendor/README.md).
 
 | Package | Upstream name | Source | License |
 | --- | --- | --- | --- |
-${vendored.map(row => `| \`${row.npmName}\` | \`${row.upstreamName}\` | [${row.sourceDirectory}](${row.sourceDirectory}/) | MIT |`).join('\n')}
+${vendored.map(row => `| \`${row.npmName}\` | \`${row.upstreamName}\` | [${row.sourceDirectory}](${row.sourceDirectory}/) | ${row.license} |`).join('\n')}
 
 ## Runtime npm dependencies
 

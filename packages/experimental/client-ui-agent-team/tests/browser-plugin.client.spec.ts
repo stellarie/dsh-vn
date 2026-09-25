@@ -8,12 +8,15 @@ import type {} from '@deepseek-ai/dsh-experimental-agent-team/remote'
 import { RemoteError } from '@deepseek-ai/dsh-client-test-runtime'
 import type { TypertRemoteContribution } from '@deepseek-ai/dsh-typert-protocol'
 import { TeamAction, type TeamActionInjected } from '../src/client/TeamAction.tsx'
+import { TeamSidebar, type TeamSidebarInjected } from '../src/client/TeamSidebar.tsx'
 import { inject, mountAgentTeamUi } from '../src/client/mount.ts'
 import { apply as nodeApply } from '../src/index.ts'
 
 const SESSION = 'team-session' as SessionId
 const CHILD = 'team-child' as SessionId
 const TASK_ID = 'task-1' as TeamTaskId
+const TAB_ID = '@deepseek-ai/dsh-experimental-client-ui-agent-team'
+const TAB_KIND = 'agent-team'
 const REMOTE: TypertRemoteContribution = {
   package: '@deepseek-ai/dsh-experimental-agent-team',
   descriptors: [],
@@ -67,6 +70,10 @@ async function bench(options: {
         : { ok: true as const, value: view })
     },
     createTask: answer('agentTeams/createTask', task),
+    sendMessage: answer('agentTeams/sendMessage', {
+      messageId: 'team-message-1',
+      status: 'accepted' as const,
+    }),
     updateTask: (...args: unknown[]) => {
       calls.push({ method: 'agentTeams/updateTask', args })
       if (options.remoteFailure === 'update') return Promise.resolve(failure)
@@ -115,10 +122,18 @@ async function bench(options: {
   } as never)
   ctx.provide('conversation', {})
   ctx.provide('locale', new LocaleRuntime(ctx))
+  const removeType = vi.fn()
+  const registerType = vi.fn((_definition: { id: string; kind: string; title: (address: string) => string }) => removeType)
+  const openTab = vi.fn()
+  ctx.provide('sidebarRightTabs', { register: registerType })
+  ctx.provide('sidebarRight', { openTab })
   await ctx.plugin(SlotRegistry).await()
   const collapseHeader = ctx.slots.register({
     name: 'root',
-    children: { 'conversation.session.header.actions': { kind: 'list', scope: 'session' } },
+    children: {
+      'conversation.session.header.actions': { kind: 'list', scope: 'session' },
+      'sidebar.right.pane.tab': { kind: 'keyed', scope: 'session' },
+    },
   } as never, () => null)
   if (options.registrationFailure === true) {
     vi.spyOn(ctx.slots, 'inject').mockImplementationOnce(() => { throw new Error('slot registration failed') })
@@ -136,6 +151,8 @@ async function bench(options: {
   }
   const entry = () => ctx.slots.entries('conversation.session.header.actions')
     .find(candidate => candidate.component === TeamAction)
+  const body = () => ctx.slots.entries('sidebar.right.pane.tab')
+    .find(candidate => candidate.component === TeamSidebar)
   return {
     ctx,
     fiber,
@@ -144,7 +161,11 @@ async function bench(options: {
     navigation,
     remote,
     entry,
+    body,
     collapseHeader,
+    registerType,
+    removeType,
+    openTab,
     select: (sessionId: SessionId) => { mainSessionId = sessionId },
   }
 }
@@ -152,7 +173,9 @@ async function bench(options: {
 describe('ui-team browser plugin', () => {
   it('registers one disposable header action with RPC-backed task operations', async () => {
     const b = await bench()
-    expect(inject).toEqual(['sessions', 'uiWorkspace', 'remote', 'slots', 'locale'])
+    expect(inject).toEqual([
+      'sessions', 'uiWorkspace', 'remote', 'slots', 'locale', 'sidebarRight', 'sidebarRightTabs',
+    ])
     expect(b.entry()).toMatchObject({
       options: { id: 'agent-team', order: 20 },
       locale: 'agent-team',
@@ -187,6 +210,52 @@ describe('ui-team browser plugin', () => {
     await b.fiber.dispose()
     expect(b.entry()).toBeUndefined()
     expect(b.remote.disposeMount).toHaveBeenCalledOnce()
+  })
+
+  it('registers one right-sidebar tab type and its body, and disposes both', async () => {
+    const b = await bench()
+
+    expect(b.registerType).toHaveBeenCalledOnce()
+    const definition = b.registerType.mock.calls[0]![0]
+    expect(definition).toMatchObject({ id: TAB_ID, kind: TAB_KIND, priority: 'builtin' })
+    expect(definition.title('sidebar://agent-team')).toBe('Agent Team')
+
+    const body = b.body()
+    expect(body).toMatchObject({
+      options: { key: TAB_ID },
+      locale: 'agent-team',
+    })
+
+    const injected = (body!.inject as unknown as () => TeamSidebarInjected)()
+    expect((await injected.load(SESSION)).ok).toBe(true)
+    expect((await injected.steer(SESSION, { target: 'worker', text: 'polish the pane' })).ok).toBe(true)
+    expect((await injected.createTask(SESSION, {
+      subject: 'Pane task', description: 'Created from the pane', blockedBy: [], writeScopes: [],
+    })).ok).toBe(true)
+    expect((await injected.updateTask(SESSION, {
+      taskId: TASK_ID, expectedRevision: 1, action: 'reassign', owner: 'worker',
+    })).ok).toBe(true)
+    expect(b.calls.map(call => call.method)).toEqual([
+      'agentTeams/view', 'agentTeams/sendMessage', 'agentTeams/createTask', 'agentTeams/updateTask',
+    ])
+    expect(b.calls.at(-1)?.args[1]).toMatchObject({ owner: 'worker' })
+
+    const actions = (b.entry()!.inject as unknown as () => TeamActionInjected)()
+    actions.openStack()
+    expect(b.openTab).toHaveBeenCalledWith(TAB_KIND)
+
+    await b.fiber.dispose()
+    expect(b.body()).toBeUndefined()
+    expect(b.removeType).toHaveBeenCalledOnce()
+  })
+
+  it('steers through the Lead session when the stack is mounted in an addressed child', async () => {
+    const b = await bench({ addressed: true })
+    const injected = (b.body()!.inject as unknown as () => TeamSidebarInjected)()
+    await injected.steer(CHILD, { target: 'worker', text: 'keep going' })
+    expect(b.calls).toEqual([
+      { method: 'agentTeams/sendMessage', args: [SESSION, { target: 'worker', text: 'keep going' }] },
+    ])
   })
 
   it('unmounts the Remote contribution when later Client registration fails', async () => {

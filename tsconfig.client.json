@@ -28,6 +28,7 @@
     "packages/*/*/tests/**/*.client.ts",
     // Client package outside packages/client with a local CSS module face.
     "packages/extensions/ui-cordis/src/css-modules.d.ts",
+    "packages/experimental/imouto-driver-panel/src/css-modules.d.ts",
     "packages/client/tsdown.client.ts",
     "scripts/client-build-environment.ts",
     "scripts/bundle-input-isolation.ts",
@@ -78,6 +79,9 @@
     { "path": "./packages/client/ui-approval" },
     { "path": "./packages/client/ui-chat" },
     { "path": "./packages/client/ui-conversation" },
+    { "path": "./packages/client/ui-vn/tsconfig.client.json" },
+    { "path": "./packages/client/ui-balance/tsconfig.client.json" },
+    { "path": "./packages/experimental/imouto-driver-panel/tsconfig.client.json" },
     { "path": "./packages/client/ui-tool" },
     { "path": "./packages/client/ui-deliverables/tsconfig.client.json" },
     { "path": "./packages/client/ui-workflow-run" },
@@ -105,6 +109,7 @@
     { "path": "./packages/client/ui-plan" },
     { "path": "./packages/client/ui-settings-plugins" },
     { "path": "./packages/client/ui-user-questions" },
+    { "path": "./packages/client/ui-session-cards" },
     { "path": "./packages/client/ui-trajectory" },
     { "path": "./packages/session-query/session-log-export/tsconfig.client.json" },
     { "path": "./packages/client/ui-open-in-app" },
@@ -122,6 +127,7 @@
     { "path": "./packages/api/workspace-files/tsconfig.client.json" },
     { "path": "./packages/client/web" },
     { "path": "./packages/context/file-reference" },
+    { "path": "./vendor/imouto-codex/tsconfig.client.json" },
     { "path": "./apps/web" }
   ]
 }

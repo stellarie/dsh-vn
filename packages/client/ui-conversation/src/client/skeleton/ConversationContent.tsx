@@ -176,6 +176,7 @@ export function ConversationContent(props: ConversationContentProps) {
   const composerSeat = (
     <div ref={seatResizeRef} className={css.composerSeat} data-composer-seat="">
       {composer}
+      {renderSlot('conversation.composer.footer', {})}
     </div>
   )
 
@@ -186,6 +187,9 @@ export function ConversationContent(props: ConversationContentProps) {
       data-conversation-content=""
       data-content-phase={phase}
     >
+      <div className={css.backgroundLayer} data-conversation-background="">
+        {sessionId === undefined ? null : renderSlot('conversation.background', {})}
+      </div>
       <div className={css.scrollBody} data-conversation-scroll="">
         {sessionId === undefined ? null : <Views />}
         {composerSeat}

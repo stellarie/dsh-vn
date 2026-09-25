@@ -169,7 +169,7 @@ dispose 会关闭准入、中止并等待已获准的创建与 mailbox dispatch 
 
 ### 浏览器 Remote
 
-`TeamService` 除了 roster、mailbox、task 与 lifecycle operation，还拥有生成的 `agentTeams/view`、`agentTeams/createTask` 与 `agentTeams/updateTask` Remote method。`./remote` 导出由 Web UI 挂载的 Client contribution，`./client` 则重新导出可在浏览器 compilation face 中安全使用的 request、view 与 task mutation result type。Typert 在外层 `RemoteResult` 中保留 transport failure；create 与 update rejection 则作为 transport 成功响应中的显式 domain result，其中过期的 update revision 会区分为 task conflict。
+`TeamService` 除了 roster、mailbox、task 与 lifecycle operation，还拥有生成的 `agentTeams/view`、`agentTeams/createTask`、`agentTeams/updateTask` 与 `agentTeams/sendMessage` Remote method。`agentTeams/sendMessage` 接受一行浏览器 steering 文本：其 request 携带 target 名称与一行文本，Host 将这一行封装为 text content block，送入 `sendMessage()` 使用的同一个持久 mailbox。它的首个 parameter 是寻址到的 member，因此把 Team Lead session 作为调用者的浏览器请求即以 Lead 身份 steering。`./remote` 导出由 Web UI 挂载的 Client contribution，`./client` 则重新导出可在浏览器 compilation face 中安全使用的 request、view、peer message result 与 task mutation result type。Typert 在外层 `RemoteResult` 中保留 transport failure；create 与 update rejection 则作为 transport 成功响应中的显式 domain result，其中过期的 update revision 会区分为 task conflict，而被拒绝的 steering 调用会抛出并以 transport failure 形式返回调用方。
 
 ## 模型体验
 
