@@ -371,6 +371,7 @@
     { "path": "./packages/experimental/agent-team" },
     { "path": "./packages/experimental/agent-team-profile" },
     { "path": "./packages/experimental/imouto-dev-profile" },
+    { "path": "./packages/experimental/claude-code" },
     { "path": "./packages/experimental/imouto-dev-process" },
     { "path": "./packages/experimental/imouto-driver-panel/tsconfig.host.json" },
     { "path": "./packages/experimental/tool-agent-team" },

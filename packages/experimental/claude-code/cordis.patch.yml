@@ -1,0 +1,5 @@
+# Registers the Claude Code model provider.
+
+- insert:
+    - id: claude-code
+      name: '@deepseek-ai/dsh-experimental-claude-code'

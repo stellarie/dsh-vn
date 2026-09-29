@@ -701,6 +701,30 @@ Depends on: `ModelConfig` (`@browserbasehq/stagehand`)
 
 来源：[`packages/experimental/browser-use-stagehand-native/src/index.ts:28`](../packages/experimental/browser-use-stagehand-native/src/index.ts)
 
+<a id="deepseek-aidsh-experimental-claude-code"></a>
+
+## `@deepseek-ai/dsh-experimental-claude-code`
+
+需要：`llm`
+
+```ts config-catalog
+/** Deployment-owned provider route, thinking display, child environment, and query timeouts. */
+export interface Config {
+  /** LLM provider route name (default `claude-code`). */
+  providerName?: string
+  /** Whether Claude returns thinking summaries (`summarized`, default) or none (`omitted`). */
+  thinkingDisplay?: 'summarized' | 'omitted'
+  /** Variables layered over the child environment after the Claude Code and Anthropic variables are removed. */
+  env?: Record<string, string>
+  /** Milliseconds a live Claude Code query may sit unused before it closes (default 30 minutes). */
+  idleTimeoutMs?: number
+  /** Milliseconds one dsh tool call may take, human approval included (default 24 hours; at least 24 hours is advised). */
+  toolTimeoutMs?: number
+}
+```
+
+来源：[`packages/experimental/claude-code/src/index.ts:46`](../packages/experimental/claude-code/src/index.ts)
+
 <a id="deepseek-aidsh-experimental-computer-use-cua-driver-mcp"></a>
 
 ## `@deepseek-ai/dsh-experimental-computer-use-cua-driver-mcp`
@@ -890,10 +914,23 @@ export interface Config {
   readonly freshProvider?: string
   /** Continuable-subagent provider used for completed-prefix fork teammates. */
   readonly forkProvider?: string
+  /**
+   * Exact provider/model routes the Lead may select for a fresh teammate.
+   * An empty list hides the route fields from `spawn_teammate`.
+   */
+  readonly allowedModels?: AllowedModelRoute[]
+}
+
+/** One exact LLM route the Lead may select for a fresh teammate. */
+export interface AllowedModelRoute {
+  /** Registered LLM provider id. */
+  readonly provider: string
+  /** Provider-owned exact model id. */
+  readonly model: string
 }
 ```
 
-来源：[`packages/experimental/tool-agent-team/src/index.ts:17`](../packages/experimental/tool-agent-team/src/index.ts)
+来源：[`packages/experimental/tool-agent-team/src/index.ts:31`](../packages/experimental/tool-agent-team/src/index.ts)
 
 <a id="deepseek-aidsh-file-reference-local"></a>
 
@@ -3548,7 +3585,7 @@ export interface Config {
 export type ToolPresentationMode = 'native' | 'ptc' | 'both'
 ```
 
-来源：[`packages/core/tools/src/index.ts:656`](../packages/core/tools/src/index.ts)
+来源：[`packages/core/tools/src/index.ts:657`](../packages/core/tools/src/index.ts)
 
 <a id="deepseek-aidsh-typert-loader"></a>
 
