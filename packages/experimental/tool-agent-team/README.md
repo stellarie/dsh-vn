@@ -33,7 +33,7 @@ Choose it when the model should create and coordinate teammates by itself rather
 
 ### Smallest working example
 
-The smallest addition to an existing composition is the two-package fragment from the [agent-team README](../agent-team/README.md#smallest-working-setup): durable session storage, the team domain package, and this package. The plugin itself takes two optional settings:
+The smallest addition to an existing composition is the two-package fragment from the [agent-team README](../agent-team/README.md#smallest-working-setup): durable session storage, the team domain package, and this package. The plugin itself takes three optional settings:
 
 ```yaml
 - id: tool-agent-team
@@ -47,6 +47,22 @@ The smallest addition to an existing composition is the two-package fragment fro
 |---|---|---|
 | `freshProvider` | `spawn` | Provider that starts fresh teammates |
 | `forkProvider` | `fork` | Provider that starts fork teammates |
+| `allowedModels` | `[]` | Exact `provider` and `model` routes the Lead may select for a fresh teammate; empty hides the route fields |
+
+Set `allowedModels` to let the Lead start a fresh teammate on another model route, for example the `claude-code` provider with `sonnet` or `opus`:
+
+```yaml
+    allowedModels:
+      - provider: claude-code
+        model: sonnet
+```
+
+With a non-empty list, `spawn_teammate` accepts three optional fields:
+
+- `provider` and `model` — supply both or neither. The pair must match one `allowedModels` entry.
+- `reasoning_effort` — an adapter-owned effort id. Without `provider` and `model`, it applies to the Lead route.
+
+Omitted fields keep the Lead route. Any route field with `context: fork` fails, because a fork keeps the Lead route. A route outside the list fails before any teammate starts. The chosen route is stored in the teammate session, so a resumed teammate keeps it.
 
 The generated [configuration catalog](../../../docs/config-catalog.md#deepseek-aidsh-experimental-tool-agent-team) is the exhaustive source for every accepted field and its JSDoc.
 

@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto'
 import type { Context } from '@deepseek-ai/cordis'
 import { brandString } from '@deepseek-ai/dsh-brand'
 import type { Agent } from '@deepseek-ai/dsh-agent'
+import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
 import type { MessageId } from '@deepseek-ai/dsh-llm'
 import type { SessionId } from '@deepseek-ai/dsh-session'
 import { foldSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
@@ -256,6 +257,16 @@ export class TeamRoster {
     const root = membership.root
     const name = this.memberName(request.name)
     const description = requiredText(request.description, 'description', 200)
+    if (request.route !== undefined && request.context === 'fork') {
+      throw new TeamError('a fork teammate must keep the Lead route', 'TEAM_ROUTE_FORK')
+    }
+    const agentOptions = request.route === undefined ? undefined : {
+      ...request.route.provider === undefined ? {} : { provider: request.route.provider },
+      ...request.route.model === undefined ? {} : { model: request.route.model },
+      ...request.route.reasoningEffort === undefined
+        ? {}
+        : { reasoningEffort: ReasoningEffortId(request.route.reasoningEffort) },
+    }
     const childId = brandString<SessionId>(randomUUID())
     const member: TeamMemberSnapshot = {
       id: childId,
@@ -286,6 +297,7 @@ export class TeamRoster {
         request: {
           prompt: request.prompt,
           parent: root,
+          ...agentOptions === undefined ? {} : { agentOptions },
         },
         signal,
       })

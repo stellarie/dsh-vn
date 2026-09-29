@@ -6,7 +6,7 @@ import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import AgentLoop from '@deepseek-ai/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@deepseek-ai/dsh-agent-loop-testkit'
-import { createUserMessage } from '@deepseek-ai/dsh-llm'
+import { ReasoningEffortId, createUserMessage } from '@deepseek-ai/dsh-llm'
 import { SessionLogOffset, SessionId, type Session, type SessionEvent } from '@deepseek-ai/dsh-session'
 import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
 import SubagentService from '@deepseek-ai/dsh-subagent'
@@ -17,6 +17,7 @@ import { MockAdapter, textResponse } from '../../../core/agent-loop/tests/mock-a
 import TeamService, { TeamError, TeamId, TeamMessageId, TeamTaskId } from '../src/index.ts'
 import { TeamRuntimeLifecycle } from '../src/lifecycle.ts'
 import { teamProjectionDefinition } from '../src/projection.ts'
+import { foldSubagentDescriptor } from '@deepseek-ai/dsh-subagent'
 import type { TeamMemberSnapshot, TeamMessageSnapshot, TeamTaskSnapshot } from '../src/index.ts'
 import { TestSessionQuery } from './test-session-query.ts'
 
@@ -55,9 +56,17 @@ async function storedEvents(ctx: Context, id: SessionId): Promise<readonly Sessi
   }
 }
 
+const EFFORTS = {
+  efforts: [
+    { id: ReasoningEffortId('high'), name: 'High' },
+    { id: ReasoningEffortId('low'), name: 'Low' },
+  ],
+}
+
 async function setup(
   script: ConstructorParameters<typeof MockAdapter>[0],
   config: ConstructorParameters<typeof TeamService>[1] = {},
+  reasoning?: ConstructorParameters<typeof MockAdapter>[1],
 ) {
   const ctx = new Context()
   await mountAgentLoopTestDependencies(ctx)
@@ -70,7 +79,7 @@ async function setup(
   await ctx.plugin(SubagentSpawn, { providerName: 'spawn' })
   await ctx.plugin(SubagentFork, { providerName: 'fork' })
   const teamFiber = await ctx.plugin(TeamService, config)
-  const adapter = new MockAdapter(script)
+  const adapter = new MockAdapter(script, reasoning)
   ctx.llm.registerAdapter(['mock'], adapter)
   const lead = await ctx.agentLoop.create(SessionId('lead'), { provider: 'mock', model: 'mock' })
   return { ctx, lead, adapter, storageRoot, teamFiber }
@@ -109,7 +118,11 @@ function spawn(
   ctx: Context,
   lead: Agent,
   name: string,
-  options: { context?: 'fresh' | 'fork'; provider?: string } = {},
+  options: {
+    context?: 'fresh' | 'fork'
+    provider?: string
+    route?: { provider?: string; model?: string; reasoningEffort?: string }
+  } = {},
 ) {
   const context = options.context ?? 'fresh'
   return ctx.agentTeams.spawnTeammate(lead, {
@@ -118,6 +131,7 @@ function spawn(
     prompt: content(`${name} initial`),
     context,
     provider: options.provider ?? (context === 'fork' ? 'fork' : 'spawn'),
+    ...options.route === undefined ? {} : { route: options.route },
     signal: SIGNAL,
   })
 }
@@ -135,6 +149,47 @@ async function waitRunning(ctx: Context, id: SessionId): Promise<Agent> {
 }
 
 describe('Team identity and provisioning', () => {
+  it('starts a fresh teammate on the selected route and persists it', async () => {
+    const { ctx, lead, adapter } = await setup(['hang'], {}, EFFORTS)
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const result = await spawn(ctx, lead, 'routed', {
+      route: { provider: 'mock', model: 'alt-model', reasoningEffort: 'high' },
+    })
+    expect(start.mock.calls[0]?.[0].request.agentOptions).toEqual({
+      provider: 'mock', model: 'alt-model', reasoningEffort: 'high',
+    })
+    await vi.waitFor(() => { expect(adapter.requests.length).toBe(1) })
+    expect(adapter.requests[0]).toMatchObject({ model: 'alt-model', reasoningEffort: 'high' })
+    await using persisted = await ctx.sessionPersistence.open(result.member.id, 'read')
+    const { events } = await persisted.read()
+    expect(foldSubagentDescriptor(events)).toMatchObject({
+      agentProvider: 'mock', agentModel: 'alt-model', agentReasoningEffort: 'high',
+    })
+  })
+
+  it('leaves agentOptions unset when no route is selected', async () => {
+    const { ctx, lead } = await setup(['hang'])
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    await spawn(ctx, lead, 'inheriting')
+    expect(start.mock.calls[0]?.[0].request.agentOptions).toBeUndefined()
+  })
+
+  it('applies an effort-only route to the inherited Lead route', async () => {
+    const { ctx, lead, adapter } = await setup(['hang'], {}, EFFORTS)
+    await spawn(ctx, lead, 'effort-only', { route: { reasoningEffort: 'low' } })
+    await vi.waitFor(() => { expect(adapter.requests.length).toBe(1) })
+    expect(adapter.requests[0]).toMatchObject({ model: 'mock', reasoningEffort: 'low' })
+  })
+
+  it('rejects a route on a fork teammate before any member is recorded', async () => {
+    const { ctx, lead } = await setup([])
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    await expect(spawn(ctx, lead, 'forked', { context: 'fork', route: { provider: 'mock', model: 'alt' } }))
+      .rejects.toMatchObject({ code: 'TEAM_ROUTE_FORK' })
+    expect(start).not.toHaveBeenCalled()
+    expect(durable(lead).members).toEqual([])
+  })
+
   it('rejects missing and failed authoritative Team projections', async () => {
     const first = await setup([])
     const journal = teamInternals(first.ctx).journal

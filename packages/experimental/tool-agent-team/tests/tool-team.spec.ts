@@ -6,7 +6,7 @@ import { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import AgentLoop from '@deepseek-ai/dsh-agent-loop'
 import { mountAgentLoopTestDependencies } from '@deepseek-ai/dsh-agent-loop-testkit'
-import { ToolCallId, createUserMessage } from '@deepseek-ai/dsh-llm'
+import { ReasoningEffortId, ToolCallId, createUserMessage } from '@deepseek-ai/dsh-llm'
 import { scopeOf } from '@deepseek-ai/dsh-scope'
 import { SessionId, SessionLogOffset } from '@deepseek-ai/dsh-session'
 import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
@@ -56,7 +56,12 @@ afterEach(async () => {
   for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true })
 })
 
-async function setup(script: ConstructorParameters<typeof MockAdapter>[0], legacyControl = false) {
+async function setup(
+  script: ConstructorParameters<typeof MockAdapter>[0],
+  legacyControl = false,
+  config: toolTeam.Config = {},
+  reasoning?: ConstructorParameters<typeof MockAdapter>[1],
+) {
   const ctx = new Context()
   contexts.add(ctx)
   await mountAgentLoopTestDependencies(ctx)
@@ -70,8 +75,8 @@ async function setup(script: ConstructorParameters<typeof MockAdapter>[0], legac
   await ctx.plugin(SubagentSpawn, { providerName: 'spawn' })
   await ctx.plugin(SubagentFork, { providerName: 'fork' })
   await ctx.plugin(TeamService)
-  const fiber = await ctx.plugin(toolTeam)
-  const adapter = new MockAdapter(script)
+  const fiber = await ctx.plugin(toolTeam, config)
+  const adapter = new MockAdapter(script, reasoning)
   ctx.llm.registerAdapter(['mock'], adapter)
   const lead = await ctx.agentLoop.create(SessionId('tool-team-lead'), { provider: 'mock', model: 'mock' })
   return { ctx, lead, fiber, adapter }
@@ -131,6 +136,96 @@ async function waitRunning(ctx: Context, id: SessionId): Promise<Agent> {
 async function waitNoAgent(ctx: Context, id: SessionId): Promise<void> {
   await vi.waitFor(() => { expect(ctx.agents.get(id)).toBeUndefined() }, { timeout: 5_000 })
 }
+
+const ROUTES = [{ provider: 'mock', model: 'alt-model' }]
+const EFFORTS = {
+  efforts: [
+    { id: ReasoningEffortId('high'), name: 'High' },
+    { id: ReasoningEffortId('low'), name: 'Low' },
+  ],
+}
+
+function spawnProperties(assembled: Awaited<ReturnType<typeof assembly>>): Record<string, unknown> {
+  const schema = assembled.tools.find(tool => tool.name === 'spawn_teammate')
+  const properties = (schema?.parameters as { properties?: Record<string, unknown> } | undefined)?.properties
+  if (properties === undefined) throw new Error('spawn_teammate schema has no properties')
+  return properties
+}
+
+describe('dsh-tool-team route selection', () => {
+  const spawnArgs = { name: 'routed', description: 'routed work', prompt: 'work' }
+
+  it('hides the route fields and rejects them when allowedModels is empty', async () => {
+    const { ctx, lead } = await setup(['hang'])
+    expect(Object.keys(spawnProperties(await assembly(ctx, lead)))).not.toEqual(
+      expect.arrayContaining(['provider']))
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const rejected = await execute(ctx, lead, 'spawn_teammate', { ...spawnArgs, provider: 'mock', model: 'alt-model' })
+    expect(rejected.isError).toBe(true)
+    expect(start).not.toHaveBeenCalled()
+  })
+
+  it('exposes the route fields when allowedModels is configured', async () => {
+    const { ctx, lead } = await setup(['hang'], false, { allowedModels: ROUTES }, EFFORTS)
+    expect(Object.keys(spawnProperties(await assembly(ctx, lead))))
+      .toEqual(expect.arrayContaining(['provider', 'model', 'reasoning_effort']))
+  })
+
+  it('starts a fresh teammate on an allowed route with the selected agentOptions', async () => {
+    const { ctx, lead, adapter } = await setup(['hang'], false, { allowedModels: ROUTES }, EFFORTS)
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const result = await execute(ctx, lead, 'spawn_teammate', {
+      ...spawnArgs, provider: 'mock', model: 'alt-model', reasoning_effort: 'high',
+    })
+    expect(result.isError, text(result)).toBe(false)
+    expect(start.mock.calls[0]?.[0].request.agentOptions).toEqual({
+      provider: 'mock', model: 'alt-model', reasoningEffort: 'high',
+    })
+    await vi.waitFor(() => { expect(adapter.requests.length).toBe(1) })
+    expect(adapter.requests[0]).toMatchObject({ model: 'alt-model', reasoningEffort: 'high' })
+  })
+
+  it('applies reasoning_effort alone to the inherited Lead route', async () => {
+    const { ctx, lead, adapter } = await setup(['hang'], false, { allowedModels: ROUTES }, EFFORTS)
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const result = await execute(ctx, lead, 'spawn_teammate', { ...spawnArgs, reasoning_effort: 'low' })
+    expect(result.isError, text(result)).toBe(false)
+    expect(start.mock.calls[0]?.[0].request.agentOptions).toEqual({ reasoningEffort: 'low' })
+    await vi.waitFor(() => { expect(adapter.requests.length).toBe(1) })
+    expect(adapter.requests[0]).toMatchObject({ model: 'mock', reasoningEffort: 'low' })
+  })
+
+  it('leaves agentOptions unset when no route field is supplied', async () => {
+    const { ctx, lead } = await setup(['hang'], false, { allowedModels: ROUTES })
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const result = await execute(ctx, lead, 'spawn_teammate', spawnArgs)
+    expect(result.isError, text(result)).toBe(false)
+    expect(start.mock.calls[0]?.[0].request.agentOptions).toBeUndefined()
+  })
+
+  it.each([
+    ['a route outside the allowed list', { provider: 'mock', model: 'other-model' }, 'not allowed'],
+    ['a provider without a model', { provider: 'mock' }, 'must be supplied together'],
+    ['a model without a provider', { model: 'alt-model' }, 'must be supplied together'],
+    ['a route on a fork teammate', { context: 'fork', provider: 'mock', model: 'alt-model' }, 'fork teammate'],
+    ['an effort on a fork teammate', { context: 'fork', reasoning_effort: 'high' }, 'fork teammate'],
+    ['an empty effort', { reasoning_effort: '' }, 'non-empty'],
+    ['a route on a provider absent from the list', { provider: 'ghost', model: 'alt-model' }, 'not allowed'],
+  ])('rejects %s before any child starts', async (_label, extra, message) => {
+    const { ctx, lead } = await setup(['hang'], false, { allowedModels: ROUTES }, EFFORTS)
+    const start = vi.spyOn(ctx.subagents, 'startContinuable')
+    const result = await execute(ctx, lead, 'spawn_teammate', { ...spawnArgs, ...extra })
+    expect(result.isError).toBe(true)
+    expect(text(result)).toContain(message)
+    expect(start).not.toHaveBeenCalled()
+    expect(ctx.agentTeams.listMembers(lead).map(member => member.name)).toEqual(['lead'])
+  })
+
+  it('rejects duplicate allowed routes at plugin start', async () => {
+    await expect(setup(['hang'], false, { allowedModels: [...ROUTES, ...ROUTES] }))
+      .rejects.toThrow('repeats route')
+  })
+})
 
 describe('dsh-tool-team', () => {
   it('installs the complete scoped schema and shared-checkout policy for roots and teammates', async () => {
