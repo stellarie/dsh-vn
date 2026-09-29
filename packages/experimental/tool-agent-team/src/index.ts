@@ -13,18 +13,38 @@ export const name = 'tool-agent-team'
 /** Services required by the Team tool plugin. */
 export const inject = ['agents', 'agentTeams', 'tools', 'systemPrompt']
 
+/** One exact LLM route the Lead may select for a fresh teammate. */
+export interface AllowedModelRoute {
+  /** Registered LLM provider id. */
+  readonly provider: string
+  /** Provider-owned exact model id. */
+  readonly model: string
+}
+
+/** Schema for one allowed teammate route. */
+export const AllowedModelRouteSchema: z<AllowedModelRoute> = z.object({
+  provider: z.string().min(1).required(),
+  model: z.string().min(1).required(),
+})
+
 /** Tool routing configuration. */
 export interface Config {
   /** Continuable-subagent provider used for fresh teammates. */
   readonly freshProvider?: string
   /** Continuable-subagent provider used for completed-prefix fork teammates. */
   readonly forkProvider?: string
+  /**
+   * Exact provider/model routes the Lead may select for a fresh teammate.
+   * An empty list hides the route fields from `spawn_teammate`.
+   */
+  readonly allowedModels?: AllowedModelRoute[]
 }
 
 /** Loader schema for the opt-in Team tool plugin. */
 export const Config: z<Config> = z.object({
   freshProvider: z.string().default('spawn'),
   forkProvider: z.string().default('fork'),
+  allowedModels: z.array(AllowedModelRouteSchema).default([]),
 })
 
 /** Model-facing collaboration guidance shared by Lead and teammates. */
@@ -155,6 +175,64 @@ function callingAgent(agent: Agent | undefined, toolName: string): Agent {
   return agent
 }
 
+/** Route fields the model may supply to `spawn_teammate`. */
+interface SpawnRouteArgs {
+  readonly context?: 'fresh' | 'fork' | undefined
+  readonly provider?: string | undefined
+  readonly model?: string | undefined
+  readonly reasoning_effort?: string | undefined
+}
+
+/** Teammate route after validation. */
+interface SelectedRoute {
+  readonly provider?: string
+  readonly model?: string
+  readonly reasoningEffort?: string
+}
+
+/** Reject empty or duplicate allowed routes at the configuration boundary. */
+function assertAllowedRoutes(routes: readonly AllowedModelRoute[]): void {
+  const seen = new Set<string>()
+  for (const route of routes) {
+    if (route.provider.length === 0 || route.model.length === 0) {
+      throw new Error('tool-agent-team: allowedModels requires non-empty provider and model ids')
+    }
+    const key = `${route.provider}/${route.model}`
+    if (seen.has(key)) throw new Error(`tool-agent-team: allowedModels repeats route "${key}"`)
+    seen.add(key)
+  }
+}
+
+/**
+ * Validate the route fields of one `spawn_teammate` call.
+ * @returns the teammate route, or undefined when the call inherits the Lead route.
+ */
+function selectedRoute(args: SpawnRouteArgs, allowed: readonly AllowedModelRoute[]): SelectedRoute | undefined {
+  if (args.provider === undefined && args.model === undefined && args.reasoning_effort === undefined) {
+    return undefined
+  }
+  if (allowed.length === 0) throw new Error('teammate model selection is disabled: allowedModels is empty')
+  if (args.context === 'fork') {
+    throw new Error('a fork teammate must keep the Lead route; omit provider, model, and reasoning_effort')
+  }
+  if (args.reasoning_effort !== undefined && args.reasoning_effort.length === 0) {
+    throw new Error('teammate `reasoning_effort` must be non-empty')
+  }
+  if ((args.provider === undefined) !== (args.model === undefined)) {
+    throw new Error('teammate `provider` and `model` must be supplied together')
+  }
+  if (args.provider !== undefined && !allowed.some(route =>
+    route.provider === args.provider && route.model === args.model)) {
+    throw new Error(`teammate route "${args.provider}/${args.model}" is not allowed; allowed routes: ${
+      allowed.map(route => `${route.provider}/${route.model}`).join(', ')}`)
+  }
+  return {
+    ...args.provider === undefined ? {} : { provider: args.provider },
+    ...args.model === undefined ? {} : { model: args.model },
+    ...args.reasoning_effort === undefined ? {} : { reasoningEffort: args.reasoning_effort },
+  }
+}
+
 /** Register the complete Team tool set in one exact Agent scope. */
 function install(agent: Agent, ctx: Context, config: Required<Config>): () => void {
   const scoped = agent.ctx
@@ -166,6 +244,22 @@ function install(agent: Agent, ctx: Context, config: Required<Config>): () => vo
       order: scoped.systemPrompt.getSectionOrder('TEAM_POLICY'),
       text: POLICY,
     }))
+
+    const routeList = config.allowedModels.map(route => `${route.provider}/${route.model}`).join(', ')
+    const routeParameters = config.allowedModels.length === 0 ? {} : {
+      provider: {
+        type: 'string',
+        description: `Optional LLM provider for a fresh teammate. Supply with model. Allowed provider/model routes: ${routeList}.`,
+      },
+      model: {
+        type: 'string',
+        description: 'Optional model id for a fresh teammate. Supply with provider.',
+      },
+      reasoning_effort: {
+        type: 'string',
+        description: 'Optional reasoning effort for a fresh teammate. Without provider and model it applies to the Lead route.',
+      },
+    } as const
 
     register(scoped.tools.register(defineTool({
       name: 'spawn_teammate',
@@ -179,11 +273,13 @@ function install(agent: Agent, ctx: Context, config: Required<Config>): () => vo
           enum: ['fresh', 'fork'],
           description: 'fresh starts without Lead history; fork inherits completed Lead turns. Defaults to fresh.',
         },
+        ...routeParameters,
       },
       output: jsonOutput(SPAWN_VALUE_SCHEMA),
       async execute(args, exec) {
         const agent = callingAgent(exec.agent, 'spawn_teammate')
         const context = args.context ?? 'fresh'
+        const route = selectedRoute(args, config.allowedModels)
         return await ctx.agentTeams.spawnTeammate(agent, {
           name: args.name,
           description: args.description,
@@ -193,6 +289,7 @@ function install(agent: Agent, ctx: Context, config: Required<Config>): () => vo
           ],
           context,
           provider: context === 'fork' ? config.forkProvider : config.freshProvider,
+          ...route === undefined ? {} : { route },
           signal: exec.signal,
         })
       },
@@ -392,7 +489,9 @@ export function apply(ctx: Context, config: Config = {}): void {
   const resolved: Required<Config> = {
     freshProvider: config.freshProvider ?? 'spawn',
     forkProvider: config.forkProvider ?? 'fork',
+    allowedModels: config.allowedModels ?? [],
   }
+  assertAllowedRoutes(resolved.allowedModels)
   const installed = new Map<Agent, () => void>()
   const maybeInstall = (agent: Agent): void => {
     if (installed.has(agent) || ctx.agentTeams.tryMembership(agent) === undefined) return

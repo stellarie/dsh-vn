@@ -147,7 +147,17 @@ export interface SpawnTeammateRequest {
   readonly prompt: ContentBlock[]
   readonly context: 'fresh' | 'fork'
   readonly provider: string
+  /** Fresh-teammate LLM route; omitted fields inherit the Lead route. */
+  readonly route?: TeammateRoute
   readonly signal: AbortSignal
+}
+
+/** Optional LLM route for a fresh teammate. */
+export interface TeammateRoute {
+  readonly provider?: string
+  readonly model?: string
+  /** Adapter-owned reasoning effort id. */
+  readonly reasoningEffort?: string
 }
 
 /** Result after one teammate reaches a durable active or failed edge. */

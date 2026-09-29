@@ -33,7 +33,7 @@ kind: "package-reference"
 
 ### 最小工作示例
 
-对现有组合的最小增量是 [agent-team README](../agent-team/README.zh.md#smallest-working-setup) 中的两包片段：持久会话存储、团队领域包与本包。插件本身只有两个可选设置：
+对现有组合的最小增量是 [agent-team README](../agent-team/README.zh.md#smallest-working-setup) 中的两包片段：持久会话存储、团队领域包与本包。插件本身有三个可选设置：
 
 ```yaml
 - id: tool-agent-team
@@ -47,6 +47,22 @@ kind: "package-reference"
 |---|---|---|
 | `freshProvider` | `spawn` | 启动 fresh teammate 的提供方 |
 | `forkProvider` | `fork` | 启动 fork teammate 的提供方 |
+| `allowedModels` | `[]` | Lead 可为 fresh teammate 选择的精确 `provider` 与 `model` 路由；为空时隐藏路由字段 |
+
+设置 `allowedModels` 后，Lead 可让 fresh teammate 使用其他模型路由，例如 `claude-code` 提供方的 `sonnet` 或 `opus`：
+
+```yaml
+    allowedModels:
+      - provider: claude-code
+        model: sonnet
+```
+
+列表非空时，`spawn_teammate` 接受三个可选字段：
+
+- `provider` 与 `model`——必须同时提供或同时省略，且这一对必须匹配某个 `allowedModels` 条目。
+- `reasoning_effort`——由适配器定义的推理强度 id。未提供 `provider` 与 `model` 时，它作用于 Lead 的路由。
+
+省略的字段沿用 Lead 路由。`context: fork` 时提供任何路由字段都会失败，因为 fork 必须沿用 Lead 路由。列表之外的路由会在任何 teammate 启动前失败。所选路由保存在 teammate 会话中，因此恢复后的 teammate 保持该路由。
 
 生成的[配置目录](../../../docs/config-catalog.zh.md#deepseek-aidsh-experimental-tool-agent-team)是每个受支持字段及其 JSDoc 的穷尽式真源。
 
